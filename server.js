@@ -1,7 +1,15 @@
-const express = require('express')
-const app = express()
-const port = 3000
+import 'dotenv/config';
+import express from "express";
 
+const app = express()
+
+//Environmental Variables
+const port = process.env.PORT;
+
+
+/////////////////////////////////////
+//  ROUTING OF THE HTTPS REQUESTS ///
+/////////////////////////////////////
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })

@@ -4,8 +4,8 @@
   "description": "IoT Telemetry Platform for portfolio purposes",
   "license": "ISC",
   "author": "Matteo De Cicco",
-  "type": "commonjs",
-  "main": "index.js",
+  "type": "module",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
