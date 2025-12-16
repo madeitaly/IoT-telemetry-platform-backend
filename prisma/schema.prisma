@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  // provider = "prisma-client-js"    //from Google Gemini
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String   // Hashed password
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+
+/* model Device {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  lastSeen    DateTime?
+  user        User     @relation(fields: [userId], references: [id])
+  telemetry   Telemetry[]
+  alerts      Alert[]
+  tokens      DeviceRegistrationToken[]
+}
+
+model Telemetry {
+  id         String   @id @default(uuid())
+  deviceId   String
+  ts         DateTime @default(now())
+  payload    Json
+  temperature Float?
+  humidity    Float?
+  battery     Float?
+  device     Device   @relation(fields: [deviceId], references: [id])
+  @@index([deviceId, ts])
+}
+
+model Alert {
+  id        String   @id @default(uuid())
+  deviceId  String
+  ts        DateTime @default(now())
+  type      String
+  payload   Json
+  device    Device   @relation(fields: [deviceId], references: [id])
+}
+
+model DeviceRegistrationToken {
+  id        String   @id @default(uuid())
+  deviceId  String
+  token     String   @unique
+  expiresAt DateTime
+  device    Device   @relation(fields: [deviceId], references: [id])
+} */

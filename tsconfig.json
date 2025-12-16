@@ -6,11 +6,20 @@
     // "outDir": "./dist",
     "outDir": "./build",
 
+    "module": "ESNext",
+
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    "resolveJsonModule": true,                      /* Include modules imported via .json files */
+
+    "target": "ES2023",
+    "esModuleInterop": true,  /* Enables compatibility for default imports (e.g., allows `import express from 'express'` instead of `import * as express from 'express'`) */
+    //"forceConsistentCasingInFileNames": true,       /* Ensure file names are correctly cased (important for Unix systems) */
+
+    //"ignoreDeprecations": "6.0", //NOT WORKING from PRIMA GETTING STARTED
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
-    "target": "esnext",
-    //"types": [],
+    //"module": "nodenext", //REMOVED to ALLOW IMPORT WITHOUT EXTENSION
     // For nodejs:
      "lib": ["esnext"],
      "types": ["node"],
@@ -22,9 +31,8 @@
     "declarationMap": true,
 
     // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-
+    //"noUncheckedIndexedAccess": true,
+    //"exactOptionalPropertyTypes": true,
     // Style Options
     // "noImplicitReturns": true,
     // "noImplicitOverride": true,
@@ -34,12 +42,20 @@
     // "noPropertyAccessFromIndexSignature": true,
 
     // Recommended Options
-    "strict": true,
-    "jsx": "react-jsx",
+    /* Strict Type-Checking Options */
+    "strict": true,                   /* Enable all strict type-checking options */
+    "skipLibCheck": true,           /* Skip type checking of declaration files (*.d.ts) */
+
+    "jsx": "react-jsx", 
     "verbatimModuleSyntax": true, //TO BE REVIEWD
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
-  }
+  },
+  // "include": [
+  //   "src/**/*"                                      /* Include all files inside the src directory */
+  // ],
+  // "exclude": [
+  //   "node_modules"                                  /* Exclude the node_modules directory */
+  // ]
 }
