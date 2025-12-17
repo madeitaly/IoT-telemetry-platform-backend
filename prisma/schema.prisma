@@ -48,32 +48,32 @@ model Device {
   // Relationship: Each device must be owned by one User
   owner       User     @relation(fields: [ownerId], references: [id])
     
-  telemetry   Telemetry[]
+  //telemetry   Telemetry[]
   //alerts      Alert[]
-  tokens      DeviceRegistrationToken[]
+  //tokens      DeviceRegistrationToken[]
 
   @@index([ownerId]) // Indexing the foreign key for faster queries
 }
 
-model Telemetry {
-  id          Int      @id @default(autoincrement())
-  deviceId    Int
-  ts          DateTime @default(now())
-  payload     Json
-  temperature Float?
-  humidity    Float?
-  battery     Float?
-  device     Device   @relation(fields: [deviceId], references: [id])
-  @@index([deviceId, ts])
-}
+// model Telemetry {
+//   id          Int      @id @default(autoincrement())
+//   deviceId    Int
+//   ts          DateTime @default(now())
+//   payload     Json
+//   temperature Float?
+//   humidity    Float?
+//   battery     Float?
+//   device     Device   @relation(fields: [deviceId], references: [id])
+//   @@index([deviceId, ts])
+// }
 
-model DeviceRegistrationToken {
-  id        Int      @id @default(autoincrement())
-  deviceId  Int
-  token     String   @unique
-  expiresAt DateTime
-  device    Device   @relation(fields: [deviceId], references: [id])
-}
+// model DeviceRegistrationToken {
+//   id        Int      @id @default(autoincrement())
+//   deviceId  Int
+//   token     String   @unique
+//   expiresAt DateTime
+//   device    Device   @relation(fields: [deviceId], references: [id])
+// }
 
 
 /* model Device {
