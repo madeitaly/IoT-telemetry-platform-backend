@@ -2,7 +2,7 @@
     JWT verification middleware
 */
 import type { Request, Response, NextFunction } from 'express';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 // Extend the Express Request interface to include the authenticated user's ID
 interface AuthRequest extends Request {

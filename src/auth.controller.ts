@@ -97,7 +97,7 @@ export async function login(req: Request, res: Response) {
 }
 
 /**
- * GET /auth/profile
+ * GET /api/profile
  * A protected route to fetch the authenticated user's profile data.
  * Requires the `authenticateToken` middleware.
  */

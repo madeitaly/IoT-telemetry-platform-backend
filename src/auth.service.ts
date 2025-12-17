@@ -2,7 +2,7 @@
     Business logic (hashing, JWT creation, DB interaction)
 */
 import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import {prisma} from './prisma-client.js';
 import type { User } from './generated/prisma/client.js'; // Import the generated User type
 
