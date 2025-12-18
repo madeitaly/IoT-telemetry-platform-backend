@@ -10,10 +10,19 @@ export async function ingestTelemetry(req: Request, res: Response) {
     if (!deviceId) return res.status(403).json({ error: 'Invalid or expired token' });
 
     try {
+        const { telemetry, device } = await telemetryService.saveTelemetry(deviceId, req.body);
         const entry = await telemetryService.saveTelemetry(deviceId, req.body);
         
         // --- REAL-TIME BROADCAST ---
-        //broadcastToDevice(deviceId, 'telemetry_update', entry);
+        // 1. Broadcast the specific telemetry data
+        //broadcastToDevice(deviceId, 'telemetry_update', telemetry);
+
+        // 2. Broadcast that the device state has changed (it's active)
+        // broadcastToDevice(deviceId, 'device_state_change', {
+        //     status: 'online',
+        //     lastSeen: device.lastSeen
+        // });
+
 
         res.status(201).json({ status: 'success' });
     } catch (err) {

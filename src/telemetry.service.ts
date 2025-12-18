@@ -17,14 +17,27 @@ export async function validateDeviceToken(token: string): Promise<number | null>
  * Saves telemetry data to the DB.
  */
 export async function saveTelemetry(deviceId: number, data: any) {
-    return prisma.telemetry.create({
-        data: {
-            deviceId,
-            payload: data.payload || {},
-            temperature: data.temperature,
-            humidity: data.humidity,
-            battery: data.battery,
-        }
+    // We use a transaction to ensure both the telemetry log 
+    // and the device status are updated together.
+    return prisma.$transaction(async (tx) => {
+        // 1. Create the telemetry record
+        const telemetry = await tx.telemetry.create({
+            data: {
+                deviceId,
+                payload: data.payload || {},
+                temperature: data.temperature,
+                humidity: data.humidity,
+                battery: data.battery,
+            }
+        });
+
+        // 2. Update the Device lastSeen
+        const device = await tx.device.update({
+            where: { id: deviceId },
+            data: { lastSeen: new Date() }
+        });
+
+        return { telemetry, device };
     });
 }
 
