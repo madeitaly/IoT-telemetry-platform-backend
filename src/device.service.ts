@@ -1,5 +1,6 @@
 import {prisma} from './prisma-client.js'; 
-import type { Device } from './generated/prisma/client.js';
+import type { Device , DeviceRegistrationToken } from './generated/prisma/client.js';
+import crypto from 'crypto';
 
 // --- Type Definitions for clear function signatures ---
 type DeviceCreateInput = {
@@ -22,8 +23,27 @@ type DeviceUpdateInput = {
 
 /** POST /api/devices: Creates a new device owned by a user. */
 export async function createDevice(data: DeviceCreateInput): Promise<Device> {
-    return prisma.device.create({
-        data,
+    // We use a transaction to ensure both records are created together
+    return prisma.$transaction(async (tx) => {
+        // 1. Create the Device
+        const device = await tx.device.create({
+            data,
+        });
+
+        // 2. Generate a secure random token
+        const generatedToken = crypto.randomBytes(32).toString('hex');
+
+        // 3. Create the Token (Setting expiration to year 9999 for "forever")
+        const tokenRecord = await tx.deviceRegistrationToken.create({
+            data: {
+                deviceId: device.id,
+                token: generatedToken,
+                expiresAt: new Date('9999-12-31T23:59:59Z'),
+            },
+        });
+
+        // Return both so the controller can show the token to the user once
+        return { ...device, registrationToken: tokenRecord.token };
     });
 }
 

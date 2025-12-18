@@ -41,39 +41,46 @@ model Device {
   name        String
   location    String?  // Optional location string
   ownerId     Int      // Foreign key linking to the User who registered it
+  // Relationship: Each device must be owned by one User
+  owner       User     @relation(fields: [ownerId], references: [id])
+    
+  telemetry   Telemetry[]
+  tokens      DeviceRegistrationToken[]
+  //alerts      Alert[]
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   lastSeen    DateTime?
 
-  // Relationship: Each device must be owned by one User
-  owner       User     @relation(fields: [ownerId], references: [id])
-    
-  //telemetry   Telemetry[]
-  //alerts      Alert[]
-  //tokens      DeviceRegistrationToken[]
-
   @@index([ownerId]) // Indexing the foreign key for faster queries
 }
 
-// model Telemetry {
-//   id          Int      @id @default(autoincrement())
-//   deviceId    Int
-//   ts          DateTime @default(now())
-//   payload     Json
-//   temperature Float?
-//   humidity    Float?
-//   battery     Float?
-//   device     Device   @relation(fields: [deviceId], references: [id])
-//   @@index([deviceId, ts])
-// }
+//////////////////////////////////
+//        TELEMETRY MODEL       //
+//////////////////////////////////
+model Telemetry {
+  id          Int      @id @default(autoincrement())
+  deviceId    Int
+  ts          DateTime @default(now())
+  payload     Json    // Flexible JSON for miscellaneous data
+  temperature Float?
+  humidity    Float?
+  battery     Float?
+  device      Device   @relation(fields: [deviceId], references: [id])
 
-// model DeviceRegistrationToken {
-//   id        Int      @id @default(autoincrement())
-//   deviceId  Int
-//   token     String   @unique
-//   expiresAt DateTime
-//   device    Device   @relation(fields: [deviceId], references: [id])
-// }
+  @@index([deviceId, ts])
+}
+
+//////////////////////////////////
+//      REGISTRATION MODEL      //
+//////////////////////////////////
+model DeviceRegistrationToken {
+  id        Int      @id @default(autoincrement())
+  deviceId  Int
+  token     String   @unique
+  expiresAt DateTime
+  device    Device   @relation(fields: [deviceId], references: [id])
+}
 
 
 /* model Device {
