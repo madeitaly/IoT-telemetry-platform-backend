@@ -2,7 +2,7 @@
     Business logic (hashing, JWT creation, DB interaction)
 */
 import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { prisma } from './prisma-client.js';
 // --- Configuration ---
 // Get the secret key from environment variables (MANDATORY for production)

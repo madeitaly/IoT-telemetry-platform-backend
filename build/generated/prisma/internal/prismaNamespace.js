@@ -14,7 +14,7 @@
  * model files in the `model` directory!
  */
 import * as runtime from "@prisma/client/runtime/client";
-import {} from "./class";
+import {} from "./class.js";
 /**
  * Prisma Errors
  */
@@ -68,7 +68,10 @@ export const JsonNull = runtime.JsonNull;
  */
 export const AnyNull = runtime.AnyNull;
 export const ModelName = {
-    User: 'User'
+    User: 'User',
+    Device: 'Device',
+    Telemetry: 'Telemetry',
+    DeviceRegistrationToken: 'DeviceRegistrationToken'
 };
 /**
  * Enums
@@ -87,13 +90,50 @@ export const UserScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
+export const DeviceScalarFieldEnum = {
+    id: 'id',
+    serial: 'serial',
+    name: 'name',
+    location: 'location',
+    ownerId: 'ownerId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    lastSeen: 'lastSeen'
+};
+export const TelemetryScalarFieldEnum = {
+    id: 'id',
+    deviceId: 'deviceId',
+    ts: 'ts',
+    payload: 'payload',
+    temperature: 'temperature',
+    humidity: 'humidity',
+    battery: 'battery'
+};
+export const DeviceRegistrationTokenScalarFieldEnum = {
+    id: 'id',
+    deviceId: 'deviceId',
+    token: 'token',
+    expiresAt: 'expiresAt'
+};
 export const SortOrder = {
     asc: 'asc',
     desc: 'desc'
 };
+export const JsonNullValueInput = {
+    JsonNull: JsonNull
+};
 export const QueryMode = {
     default: 'default',
     insensitive: 'insensitive'
+};
+export const NullsOrder = {
+    first: 'first',
+    last: 'last'
+};
+export const JsonNullValueFilter = {
+    DbNull: DbNull,
+    JsonNull: JsonNull,
+    AnyNull: AnyNull
 };
 export const defineExtension = runtime.Extensions.defineExtension;
 //# sourceMappingURL=prismaNamespace.js.map

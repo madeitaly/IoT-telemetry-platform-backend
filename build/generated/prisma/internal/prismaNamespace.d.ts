@@ -1,7 +1,7 @@
 import * as runtime from "@prisma/client/runtime/client";
-import type * as Prisma from "../models";
-import { type PrismaClient } from "./class";
-export type * from '../models';
+import type * as Prisma from "../models.js";
+import { type PrismaClient } from "./class.js";
+export type * from '../models.js';
 export type DMMF = typeof runtime.DMMF;
 export type PrismaPromise<T> = runtime.Types.Public.PrismaPromise<T>;
 /**
@@ -232,6 +232,9 @@ export type FieldRef<Model, FieldType> = runtime.FieldRef<Model, FieldType>;
 type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRef<Model, FieldType>;
 export declare const ModelName: {
     readonly User: "User";
+    readonly Device: "Device";
+    readonly Telemetry: "Telemetry";
+    readonly DeviceRegistrationToken: "DeviceRegistrationToken";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export interface TypeMapCb<GlobalOmitOptions = {}> extends runtime.Types.Utils.Fn<{
@@ -244,7 +247,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user";
+        modelProps: "user" | "device" | "telemetry" | "deviceRegistrationToken";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -322,6 +325,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        Device: {
+            payload: Prisma.$DevicePayload<ExtArgs>;
+            fields: Prisma.DeviceFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.DeviceFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DevicePayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.DeviceFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DevicePayload>;
+                };
+                findFirst: {
+                    args: Prisma.DeviceFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DevicePayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.DeviceFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DevicePayload>;
+                };
+                findMany: {
+                    args: Prisma.DeviceFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DevicePayload>[];
+                };
+                create: {
+                    args: Prisma.DeviceCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DevicePayload>;
+                };
+                createMany: {
+                    args: Prisma.DeviceCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.DeviceCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DevicePayload>[];
+                };
+                delete: {
+                    args: Prisma.DeviceDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DevicePayload>;
+                };
+                update: {
+                    args: Prisma.DeviceUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DevicePayload>;
+                };
+                deleteMany: {
+                    args: Prisma.DeviceDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.DeviceUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.DeviceUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DevicePayload>[];
+                };
+                upsert: {
+                    args: Prisma.DeviceUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DevicePayload>;
+                };
+                aggregate: {
+                    args: Prisma.DeviceAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateDevice>;
+                };
+                groupBy: {
+                    args: Prisma.DeviceGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.DeviceGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.DeviceCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.DeviceCountAggregateOutputType> | number;
+                };
+            };
+        };
+        Telemetry: {
+            payload: Prisma.$TelemetryPayload<ExtArgs>;
+            fields: Prisma.TelemetryFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.TelemetryFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TelemetryPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.TelemetryFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TelemetryPayload>;
+                };
+                findFirst: {
+                    args: Prisma.TelemetryFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TelemetryPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.TelemetryFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TelemetryPayload>;
+                };
+                findMany: {
+                    args: Prisma.TelemetryFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TelemetryPayload>[];
+                };
+                create: {
+                    args: Prisma.TelemetryCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TelemetryPayload>;
+                };
+                createMany: {
+                    args: Prisma.TelemetryCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.TelemetryCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TelemetryPayload>[];
+                };
+                delete: {
+                    args: Prisma.TelemetryDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TelemetryPayload>;
+                };
+                update: {
+                    args: Prisma.TelemetryUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TelemetryPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.TelemetryDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.TelemetryUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.TelemetryUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TelemetryPayload>[];
+                };
+                upsert: {
+                    args: Prisma.TelemetryUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TelemetryPayload>;
+                };
+                aggregate: {
+                    args: Prisma.TelemetryAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateTelemetry>;
+                };
+                groupBy: {
+                    args: Prisma.TelemetryGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.TelemetryGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.TelemetryCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.TelemetryCountAggregateOutputType> | number;
+                };
+            };
+        };
+        DeviceRegistrationToken: {
+            payload: Prisma.$DeviceRegistrationTokenPayload<ExtArgs>;
+            fields: Prisma.DeviceRegistrationTokenFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.DeviceRegistrationTokenFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceRegistrationTokenPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.DeviceRegistrationTokenFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceRegistrationTokenPayload>;
+                };
+                findFirst: {
+                    args: Prisma.DeviceRegistrationTokenFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceRegistrationTokenPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.DeviceRegistrationTokenFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceRegistrationTokenPayload>;
+                };
+                findMany: {
+                    args: Prisma.DeviceRegistrationTokenFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceRegistrationTokenPayload>[];
+                };
+                create: {
+                    args: Prisma.DeviceRegistrationTokenCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceRegistrationTokenPayload>;
+                };
+                createMany: {
+                    args: Prisma.DeviceRegistrationTokenCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.DeviceRegistrationTokenCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceRegistrationTokenPayload>[];
+                };
+                delete: {
+                    args: Prisma.DeviceRegistrationTokenDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceRegistrationTokenPayload>;
+                };
+                update: {
+                    args: Prisma.DeviceRegistrationTokenUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceRegistrationTokenPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.DeviceRegistrationTokenDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.DeviceRegistrationTokenUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.DeviceRegistrationTokenUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceRegistrationTokenPayload>[];
+                };
+                upsert: {
+                    args: Prisma.DeviceRegistrationTokenUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceRegistrationTokenPayload>;
+                };
+                aggregate: {
+                    args: Prisma.DeviceRegistrationTokenAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateDeviceRegistrationToken>;
+                };
+                groupBy: {
+                    args: Prisma.DeviceRegistrationTokenGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.DeviceRegistrationTokenGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.DeviceRegistrationTokenCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.DeviceRegistrationTokenCountAggregateOutputType> | number;
+                };
+            };
+        };
     };
 } & {
     other: {
@@ -365,16 +590,59 @@ export declare const UserScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
+export declare const DeviceScalarFieldEnum: {
+    readonly id: "id";
+    readonly serial: "serial";
+    readonly name: "name";
+    readonly location: "location";
+    readonly ownerId: "ownerId";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+    readonly lastSeen: "lastSeen";
+};
+export type DeviceScalarFieldEnum = (typeof DeviceScalarFieldEnum)[keyof typeof DeviceScalarFieldEnum];
+export declare const TelemetryScalarFieldEnum: {
+    readonly id: "id";
+    readonly deviceId: "deviceId";
+    readonly ts: "ts";
+    readonly payload: "payload";
+    readonly temperature: "temperature";
+    readonly humidity: "humidity";
+    readonly battery: "battery";
+};
+export type TelemetryScalarFieldEnum = (typeof TelemetryScalarFieldEnum)[keyof typeof TelemetryScalarFieldEnum];
+export declare const DeviceRegistrationTokenScalarFieldEnum: {
+    readonly id: "id";
+    readonly deviceId: "deviceId";
+    readonly token: "token";
+    readonly expiresAt: "expiresAt";
+};
+export type DeviceRegistrationTokenScalarFieldEnum = (typeof DeviceRegistrationTokenScalarFieldEnum)[keyof typeof DeviceRegistrationTokenScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";
 };
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
+export declare const JsonNullValueInput: {
+    readonly JsonNull: runtime.JsonNullClass;
+};
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
 export declare const QueryMode: {
     readonly default: "default";
     readonly insensitive: "insensitive";
 };
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode];
+export declare const NullsOrder: {
+    readonly first: "first";
+    readonly last: "last";
+};
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder];
+export declare const JsonNullValueFilter: {
+    readonly DbNull: runtime.DbNullClass;
+    readonly JsonNull: runtime.JsonNullClass;
+    readonly AnyNull: runtime.AnyNullClass;
+};
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter];
 /**
  * Field references
  */
@@ -410,6 +678,14 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>;
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>;
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>;
 /**
  * Reference to a field of type 'Float'
  */
@@ -513,6 +789,9 @@ export type PrismaClientOptions = ({
 };
 export type GlobalOmitConfig = {
     user?: Prisma.UserOmit;
+    device?: Prisma.DeviceOmit;
+    telemetry?: Prisma.TelemetryOmit;
+    deviceRegistrationToken?: Prisma.DeviceRegistrationTokenOmit;
 };
 export type LogLevel = 'info' | 'query' | 'warn' | 'error';
 export type LogDefinition = {

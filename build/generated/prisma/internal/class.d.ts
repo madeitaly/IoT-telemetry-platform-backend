@@ -1,5 +1,5 @@
 import * as runtime from "@prisma/client/runtime/client";
-import type * as Prisma from "./prismaNamespace";
+import type * as Prisma from "./prismaNamespace.js";
 export type LogOptions<ClientOptions extends Prisma.PrismaClientOptions> = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never;
 export interface PrismaClientConstructor {
     /**
@@ -120,6 +120,39 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
   * ```
   */
     get user(): Prisma.UserDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.device`: Exposes CRUD operations for the **Device** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more Devices
+      * const devices = await prisma.device.findMany()
+      * ```
+      */
+    get device(): Prisma.DeviceDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.telemetry`: Exposes CRUD operations for the **Telemetry** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more Telemetries
+      * const telemetries = await prisma.telemetry.findMany()
+      * ```
+      */
+    get telemetry(): Prisma.TelemetryDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.deviceRegistrationToken`: Exposes CRUD operations for the **DeviceRegistrationToken** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more DeviceRegistrationTokens
+      * const deviceRegistrationTokens = await prisma.deviceRegistrationToken.findMany()
+      * ```
+      */
+    get deviceRegistrationToken(): Prisma.DeviceRegistrationTokenDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
 }

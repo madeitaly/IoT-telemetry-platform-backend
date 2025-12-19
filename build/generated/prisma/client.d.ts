@@ -1,8 +1,8 @@
 import * as runtime from "@prisma/client/runtime/client";
-import * as $Class from "./internal/class";
-import * as Prisma from "./internal/prismaNamespace";
-export * as $Enums from './enums';
-export * from "./enums";
+import * as $Class from "./internal/class.js";
+import * as Prisma from "./internal/prismaNamespace.js";
+export * as $Enums from './enums.js';
+export * from "./enums.js";
 /**
  * ## Prisma Client
  *
@@ -21,7 +21,26 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma };
 /**
  * Model User
- *
+ * ///////////////////////////////
+ * ///////////////////////////////
  */
 export type User = Prisma.UserModel;
+/**
+ * Model Device
+ * ///////////////////////////////
+ * ///////////////////////////////
+ */
+export type Device = Prisma.DeviceModel;
+/**
+ * Model Telemetry
+ * ///////////////////////////////
+ * ///////////////////////////////
+ */
+export type Telemetry = Prisma.TelemetryModel;
+/**
+ * Model DeviceRegistrationToken
+ * ///////////////////////////////
+ * ///////////////////////////////
+ */
+export type DeviceRegistrationToken = Prisma.DeviceRegistrationTokenModel;
 //# sourceMappingURL=client.d.ts.map

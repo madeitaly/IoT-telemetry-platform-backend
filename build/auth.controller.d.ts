@@ -13,7 +13,7 @@ export declare function register(req: Request, res: Response): Promise<Response<
  */
 export declare function login(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
 /**
- * GET /auth/profile
+ * GET /api/profile
  * A protected route to fetch the authenticated user's profile data.
  * Requires the `authenticateToken` middleware.
  */
