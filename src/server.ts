@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv'; // For loading environment variables
 import morgan from "morgan";
 import express from "express";
-//import type { Request, Response } from "express"
 import { register, login, getProfile } from './auth.controller.js';
 import { 
     createDevice, 

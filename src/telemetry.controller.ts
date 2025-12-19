@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import * as telemetryService from './telemetry.service.js';
 
+
 export async function ingestTelemetry(req: Request, res: Response) {
     const token = req.headers['x-device-token'] as string;
     
@@ -12,17 +13,6 @@ export async function ingestTelemetry(req: Request, res: Response) {
     try {
         const { telemetry, device } = await telemetryService.saveTelemetry(deviceId, req.body);
         const entry = await telemetryService.saveTelemetry(deviceId, req.body);
-        
-        // --- REAL-TIME BROADCAST ---
-        // 1. Broadcast the specific telemetry data
-        //broadcastToDevice(deviceId, 'telemetry_update', telemetry);
-
-        // 2. Broadcast that the device state has changed (it's active)
-        // broadcastToDevice(deviceId, 'device_state_change', {
-        //     status: 'online',
-        //     lastSeen: device.lastSeen
-        // });
-
 
         res.status(201).json({ status: 'success' });
     } catch (err) {
