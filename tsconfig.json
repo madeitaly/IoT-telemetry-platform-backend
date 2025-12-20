@@ -58,10 +58,12 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
   },
-  // "include": [
-  //   "src/**/*"                                      /* Include all files inside the src directory */
-  // ],
-  // "exclude": [
-  //   "node_modules"                                  /* Exclude the node_modules directory */
-  // ]
+  "include": [
+    "src/**/*"                                      /* Include all files inside the src directory */
+  ],
+  "exclude": [
+    "node_modules",
+    "prisma.config.ts", // Tell tsc to ignore this file during the build
+    "build"
+  ]
 }
