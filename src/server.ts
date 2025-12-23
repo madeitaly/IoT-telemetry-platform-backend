@@ -7,7 +7,8 @@ import {
     getDevices, 
     getDevice, 
     updateDevice, 
-    deleteDevice 
+    deleteDevice,
+    getFleetStatus 
 } from './device.controller.js';
 import { ingestTelemetry, fetchTelemetry } from './telemetry.controller.js';
 import { authenticateToken } from './auth.middleware.js';
@@ -45,6 +46,8 @@ app.use('/api', authenticateToken); // <-- Apply middleware to ALL /api routes
 // --- Protected Authentication Routes ---
 app.get('/api/profile', getProfile);
 
+app.get('/api/devices/status-summary', authenticateToken, getFleetStatus);
+
 // --- Protected Device Routes ---
 app.post('/api/devices', createDevice);
 app.get('/api/devices', getDevices);
@@ -53,6 +56,8 @@ app.patch('/api/devices/:id', updateDevice);
 app.delete('/api/devices/:id', deleteDevice);
 // Fetching telemetry history (User looking at device data)
 app.get('/api/telemetry/:deviceId', fetchTelemetry);
+
+
 
 
 

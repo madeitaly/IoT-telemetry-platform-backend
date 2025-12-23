@@ -10,7 +10,7 @@ export declare function saveTelemetry(deviceId: number, data: any): Promise<{
         id: number;
         deviceId: number;
         ts: Date;
-        payload: import("@prisma/client/runtime/client.js").JsonValue;
+        payload: import("@prisma/client/runtime/client").JsonValue;
         temperature: number | null;
         humidity: number | null;
         battery: number | null;
@@ -33,7 +33,7 @@ export declare function getTelemetry(deviceId: number, start: Date, end: Date): 
     id: number;
     deviceId: number;
     ts: Date;
-    payload: import("@prisma/client/runtime/client.js").JsonValue;
+    payload: import("@prisma/client/runtime/client").JsonValue;
     temperature: number | null;
     humidity: number | null;
     battery: number | null;

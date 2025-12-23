@@ -9,7 +9,7 @@
     "module": "ESNext",
 
     /* Module Resolution Options */
-    "moduleResolution": "node",
+    "moduleResolution": "bundler", // OR "NodeNext"
     "resolveJsonModule": true,                      /* Include modules imported via .json files */
 
     // FIX for EXTENSIONS .js
