@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv'; // For loading environment variables
+import {config} from './config.js'
 import morgan from "morgan";
 import express from "express";
 import { register, login, getProfile } from './auth.controller.js';
@@ -13,11 +13,9 @@ import {
 import { ingestTelemetry, fetchTelemetry } from './telemetry.controller.js';
 import { authenticateToken } from './auth.middleware.js';
 
-// Load environment variables from .env file
-dotenv.config();
 
 //Environmental Variables
-const LOCAL_PORT = process.env.PORT || 3000;
+const LOCAL_PORT = config.port;
 
 const app = express()
 
@@ -63,5 +61,5 @@ app.get('/api/telemetry/:deviceId', fetchTelemetry);
 
 app.listen(LOCAL_PORT, () => {
     console.log(`Server is running on http://localhost:${LOCAL_PORT}`);
-    console.log(`JWT_SECRET is set: ${!!process.env.JWT_SECRET}`);
+    console.log(`JWT_SECRET is set: ${!!config.jwtSecret}`);
 });
