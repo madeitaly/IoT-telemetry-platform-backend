@@ -12,7 +12,8 @@ import {
 } from './device.controller.js';
 import { ingestTelemetry, fetchTelemetry } from './telemetry.controller.js';
 import { authenticateToken } from './auth.middleware.js';
-
+import { authorizeRoles } from './auth.middleware.js';
+import * as adminCtrl from './admin.controller.js';
 
 //Environmental Variables
 const LOCAL_PORT = config.port;
@@ -44,7 +45,13 @@ app.use('/api', authenticateToken); // <-- Apply middleware to ALL /api routes
 // --- Protected Authentication Routes ---
 app.get('/api/profile', getProfile);
 
+// --- USER & ADMIN ROUTES ---
 app.get('/api/devices/status-summary', authenticateToken, getFleetStatus);
+
+// --- ADMIN ONLY ROUTES ---
+// We chain the authorizeRoles middleware
+app.delete('/api/admin/users/:id', authorizeRoles('ADMIN'), adminCtrl.deleteUser);
+app.delete('/api/admin/devices/:id', authorizeRoles('ADMIN'), adminCtrl.adminDeleteDevice);
 
 // --- Protected Device Routes ---
 app.post('/api/devices', createDevice);
