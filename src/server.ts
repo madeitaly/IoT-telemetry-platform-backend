@@ -14,6 +14,9 @@ import { ingestTelemetry, fetchTelemetry } from './telemetry.controller.js';
 import { authenticateToken } from './auth.middleware.js';
 import { authorizeRoles } from './auth.middleware.js';
 import * as adminCtrl from './admin.controller.js';
+import { validate } from './validate.middleware.js';
+import { TelemetrySchema, CreateDeviceSchema, RegisterSchema } from './schemas.js'
+
 
 //Environmental Variables
 const LOCAL_PORT = config.port;
@@ -32,11 +35,11 @@ app.use(express.json());
 /////////////////////////////////////
 
 // --- Public Routes ---
-app.post('/auth/register', register);
+app.post('/auth/register', validate(RegisterSchema), register);
 app.post('/auth/login', login);
 
 // --- Device Ingestion (Uses Device Token) ---
-app.post('/api/telemetry', ingestTelemetry);
+app.post('/api/telemetry', validate(TelemetrySchema), ingestTelemetry);
 
 // --- Protected Route ---
 // All subsequent routes require a valid JWT
@@ -54,7 +57,7 @@ app.delete('/api/admin/users/:id', authorizeRoles('ADMIN'), adminCtrl.deleteUser
 app.delete('/api/admin/devices/:id', authorizeRoles('ADMIN'), adminCtrl.adminDeleteDevice);
 
 // --- Protected Device Routes ---
-app.post('/api/devices', createDevice);
+app.post('/api/devices', validate(CreateDeviceSchema), createDevice);
 app.get('/api/devices', getDevices);
 app.get('/api/devices/:id', getDevice);
 app.patch('/api/devices/:id', updateDevice);
