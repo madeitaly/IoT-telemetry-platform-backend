@@ -42,7 +42,7 @@ model Device {
   location    String?  // Optional location string
   ownerId     Int      // Foreign key linking to the User who registered it
   // Relationship: Each device must be owned by one User
-  owner       User     @relation(fields: [ownerId], references: [id])
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
     
   telemetry   Telemetry[]
   tokens      DeviceRegistrationToken[]
@@ -66,7 +66,7 @@ model Telemetry {
   temperature Float?
   humidity    Float?
   battery     Float?
-  device      Device   @relation(fields: [deviceId], references: [id])
+  device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 
   @@index([deviceId, ts])
 }
@@ -79,7 +79,7 @@ model DeviceRegistrationToken {
   deviceId  Int
   token     String   @unique
   expiresAt DateTime
-  device    Device   @relation(fields: [deviceId], references: [id])
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 }
 
 
