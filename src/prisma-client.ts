@@ -2,7 +2,7 @@
     Centralized Prisma client
 */
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient } from '#prisma-client'
+import { PrismaClient } from './generated/prisma/client.js'
 import { config } from './config.js';
 
 const connectionString = `${config.databaseUrl}`;

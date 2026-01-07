@@ -16,6 +16,7 @@ import { authorizeRoles } from './auth.middleware.js';
 import * as adminCtrl from './admin.controller.js';
 import { validate } from './validate.middleware.js';
 import { TelemetrySchema, CreateDeviceSchema, RegisterSchema } from './schemas.js'
+import cors from 'cors';
 
 
 //Environmental Variables
@@ -28,6 +29,13 @@ app.use(morgan("dev"));
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+
+// const corsOptions = {
+//    origin: 'https://l3sglm.csb.app/',//(https://your-client-app.com)
+//    credentials: true
+//  };
+
+// app.use(cors(corsOptions));
 
 
 /////////////////////////////////////

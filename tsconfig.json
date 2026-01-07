@@ -6,10 +6,10 @@
     // "outDir": "./dist",
     "outDir": "./build",
 
-    "module": "ESNext",
+    "module": "NodeNext",
 
     /* Module Resolution Options */
-    "moduleResolution": "bundler", // OR "NodeNext"
+    "moduleResolution": "NodeNext", // OR "NodeNext"
     "resolveJsonModule": true,                      /* Include modules imported via .json files */
 
     // FIX for EXTENSIONS .js

@@ -1,35 +1,48 @@
-import * as dotenv from 'dotenv'; // For loading environment variables
+import { config } from './config.js';
 import morgan from "morgan";
 import express from "express";
 import { register, login, getProfile } from './auth.controller.js';
 import { createDevice, getDevices, getDevice, updateDevice, deleteDevice, getFleetStatus } from './device.controller.js';
 import { ingestTelemetry, fetchTelemetry } from './telemetry.controller.js';
 import { authenticateToken } from './auth.middleware.js';
-// Load environment variables from .env file
-dotenv.config();
+import { authorizeRoles } from './auth.middleware.js';
+import * as adminCtrl from './admin.controller.js';
+import { validate } from './validate.middleware.js';
+import { TelemetrySchema, CreateDeviceSchema, RegisterSchema } from './schemas.js';
+import cors from 'cors';
 //Environmental Variables
-const LOCAL_PORT = process.env.PORT || 3000;
+const LOCAL_PORT = config.port;
 const app = express();
 // MIDDLEWARE //
 app.use(morgan("dev"));
 // Middleware to parse JSON bodies
 app.use(express.json());
+// const corsOptions = {
+//    origin: 'https://l3sglm.csb.app/',//(https://your-client-app.com)
+//    credentials: true
+//  };
+// app.use(cors(corsOptions));
 /////////////////////////////////////
 //  ROUTING OF THE HTTPS REQUESTS ///
 /////////////////////////////////////
 // --- Public Routes ---
-app.post('/auth/register', register);
+app.post('/auth/register', validate(RegisterSchema), register);
 app.post('/auth/login', login);
 // --- Device Ingestion (Uses Device Token) ---
-app.post('/api/telemetry', ingestTelemetry);
+app.post('/api/telemetry', validate(TelemetrySchema), ingestTelemetry);
 // --- Protected Route ---
 // All subsequent routes require a valid JWT
 app.use('/api', authenticateToken); // <-- Apply middleware to ALL /api routes
 // --- Protected Authentication Routes ---
 app.get('/api/profile', getProfile);
+// --- USER & ADMIN ROUTES ---
 app.get('/api/devices/status-summary', authenticateToken, getFleetStatus);
+// --- ADMIN ONLY ROUTES ---
+// We chain the authorizeRoles middleware
+app.delete('/api/admin/users/:id', authorizeRoles('ADMIN'), adminCtrl.deleteUser);
+app.delete('/api/admin/devices/:id', authorizeRoles('ADMIN'), adminCtrl.adminDeleteDevice);
 // --- Protected Device Routes ---
-app.post('/api/devices', createDevice);
+app.post('/api/devices', validate(CreateDeviceSchema), createDevice);
 app.get('/api/devices', getDevices);
 app.get('/api/devices/:id', getDevice);
 app.patch('/api/devices/:id', updateDevice);
@@ -38,6 +51,6 @@ app.delete('/api/devices/:id', deleteDevice);
 app.get('/api/telemetry/:deviceId', fetchTelemetry);
 app.listen(LOCAL_PORT, () => {
     console.log(`Server is running on http://localhost:${LOCAL_PORT}`);
-    console.log(`JWT_SECRET is set: ${!!process.env.JWT_SECRET}`);
+    console.log(`JWT_SECRET is set: ${!!config.jwtSecret}`);
 });
 //# sourceMappingURL=server.js.map

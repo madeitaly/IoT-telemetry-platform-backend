@@ -1,3 +1,4 @@
+import { config } from '../src/config.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../src/generated/prisma/client.js';
 import * as bcrypt from 'bcryptjs';
@@ -6,6 +7,15 @@ const connectionString = `${process.env.DATABASE_URL}`;
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 async function main() {
+    // 1. THE SAFETY CHECK
+    const isRemote = config.databaseUrl?.includes('neon.tech') ||
+        config.databaseUrl?.includes('supabase') ||
+        config.isProduction;
+    if (isRemote) {
+        console.error("\n🛑 SAFETY WARNING: YOU ARE ATTEMPTING TO SEED A REMOTE/PRODUCTION DATABASE.");
+        console.error("This will delete all existing data. If you are sure, comment out this check.\n");
+        process.exit(1); // Stop the script immediately
+    }
     console.log('--- Start Seeding ---');
     // 1. Clear existing data (Be careful with this in production!)
     await prisma.telemetry.deleteMany();

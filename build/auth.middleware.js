@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { prisma } from './prisma-client.js';
 // Get the secret key from environment variables
 const JWT_SECRET = process.env.JWT_SECRET || 'YOUR_VERY_STRONG_SECRET';
 /**
@@ -25,5 +26,27 @@ export const authenticateToken = (req, res, next) => {
         console.error('JWT verification failed:', err);
         return res.status(403).json({ error: 'Invalid or expired token.' });
     }
+};
+/**
+ * Middleware to restrict access to specific roles.
+ * Usage: authorizeRoles('ADMIN')
+ */
+export const authorizeRoles = (...allowedRoles) => {
+    return async (req, res, next) => {
+        const userId = req.userId;
+        if (!userId)
+            return res.status(401).json({ error: 'Unauthorized' });
+        // Fetch user from DB to check current role
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { role: true }
+        });
+        if (!user || !allowedRoles.includes(user.role)) {
+            return res.status(403).json({
+                error: `Access Denied. Required role: ${allowedRoles.join(' or ')}`
+            });
+        }
+        next(); // User has the required role
+    };
 };
 //# sourceMappingURL=auth.middleware.js.map
