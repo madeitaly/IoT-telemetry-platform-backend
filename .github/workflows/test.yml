@@ -9,6 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # <-- Kills the job if it takes longer than 10 mins
 
     # Define a Service for the Database
     services:
