@@ -1,4 +1,4 @@
-name: Node.js CI
+name: IoT Telemetry Platform CI
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10  # <-- Kills the job if it takes longer than 10 mins
 
-    # Define a Service for the Database
+    # Define a Service for the Database and Cache
     services:
       postgres:
         image: postgres:18
@@ -24,6 +24,18 @@ jobs:
         # Health check to ensure DB is ready before tests start
         options: >-
           --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+      # ADD THIS REDIS BLOCK
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+        # Health check ensures Redis is ready before tests start
+        options: >-
+          --health-cmd "redis-cli ping"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -43,9 +55,11 @@ jobs:
     # Set up environment variables for the test run
     - name: Run Tests
       env:
+        NODE_ENV: test
         DATABASE_URL: postgres://test_user:test_password@localhost:5432/test_db
         JWT_SECRET: "super_secret_test_key"
         PORT: 3000
+        REDIS_URL: "redis://localhost:6379"
       run: |
         npx prisma migrate dev --name init # Create schema in test DB
         npx prisma generate
