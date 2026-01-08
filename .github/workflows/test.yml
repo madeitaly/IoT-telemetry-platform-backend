@@ -47,4 +47,5 @@ jobs:
         PORT: 3000
       run: |
         npx prisma migrate dev --name init # Create schema in test DB
+        npx prisma generate
         npm test
