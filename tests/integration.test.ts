@@ -15,46 +15,77 @@ describe('IoT Platform Full Handshake', () => {
 
   // --- 1. AUTH & ROLE TESTING ---
   describe('Authentication & Roles', () => {
+
+    //Sucessful Registration of a User USER
     it('should register a generic USER', async () => {
       const res = await request(app).post('/auth/register').send({
         email: 'user@test.com',
         password: 'password123',
-        role: 'USER' // Assuming your register handles role or defaults to USER
+        role: 'USER'
       });
-      expect(res.status).toBe(201); // or 200 depending on your controller
+      expect(res.status).toBe(201);
       expect(res.body).toHaveProperty('token');
     });
 
-  //   it('should register an ADMIN', async () => {
-  //     const res = await request(app).post('/auth/register').send({
-  //       email: 'admin@test.com',
-  //       password: 'adminpass',
-  //       role: 'ADMIN'
-  //     });
-  //     expect(res.status).toBe(201);
-  //     expect(res.body).toHaveProperty('token');
-  //   });
+    //Sucessful Registration of a User ADMIN
+    it('should register an ADMIN', async () => {
+      const res = await request(app).post('/auth/register').send({
+        email: 'admin@test.com',
+        password: 'adminpass',
+        role: 'ADMIN'
+      });
+      expect(res.status).toBe(201);
+      expect(res.body).toHaveProperty('token');
+    });
 
-  //   it('should login USER and get JWT', async () => {
-  //     const res = await request(app).post('/auth/login').send({
-  //       email: 'user@test.com',
-  //       password: 'password123'
-  //     });
-  //     expect(res.status).toBe(200);
-  //     expect(res.body).toHaveProperty('token');
-  //     userToken = res.body.token; // Save for future requests
-  //   });
+    //Fail Registration of a User USER - missing email
+    it('should fail to register an User without email', async () => {
+      const res = await request(app).post('/auth/register').send({
+        password: 'password123',
+      });
+      expect(res.status).toBe(400);
+    });
+   
+    //Fail Registration of a User USER - missing password
+    it('should fail to register an User without password', async () => {
+      const res = await request(app).post('/auth/register').send({
+        email: 'user@test.com',
+      });
+      expect(res.status).toBe(400);
+    });
 
-  //   it('should login ADMIN and get JWT', async () => {
-  //     const res = await request(app).post('/auth/login').send({
-  //       email: 'admin@test.com',
-  //       password: 'adminpass'
-  //     });
-  //     expect(res.status).toBe(200);
-  //     expect(res.body).toHaveProperty('token');
-  //     adminToken = res.body.token;
-  //   });
-  // });
+    //Fail Registration of a User that already registered the email
+    it('should fail to register a User with email already registered', async () => {
+      const res = await request(app).post('/auth/register').send({
+        email: 'user@test.com',
+        password: 'querty123',
+      });
+      expect(res.status).toBe(409);
+    });
+    
+    
+    //Successful login of a USER
+    it('should login USER and get JWT', async () => {
+      const res = await request(app).post('/auth/login').send({
+        email: 'user@test.com',
+        password: 'password123'
+      });
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('token');
+      userToken = res.body.token; // Save for future requests
+    });
+
+    //Successful login of an ADMIN
+    it('should login ADMIN and get JWT', async () => {
+      const res = await request(app).post('/auth/login').send({
+        email: 'admin@test.com',
+        password: 'adminpass'
+      });
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('token');
+      adminToken = res.body.token; // Save for future requests
+    });
+  });
 
   // // --- 2. DEVICE LIFECYCLE (USER) ---
   // describe('Device Management (User Flow)', () => {
@@ -141,6 +172,6 @@ describe('IoT Platform Full Handshake', () => {
   //     // Expect success (200) or 204 No Content
   //     expect([200, 204]).toContain(res.status);
   //   });
-  });
+//   });
 
 });

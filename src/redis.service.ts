@@ -1,9 +1,22 @@
 import { createClient } from 'redis';
 import {config} from './config.js';
 
-const redis = createClient({ url: config.redisUrl });
+
+const redis = createClient({
+    username: config.redisUser,
+    password: config.redisPassword,
+    socket: {
+        host: 'redis-18109.c335.europe-west2-1.gce.cloud.redislabs.com',
+        port: 18109
+    }
+});
+
+//const redis = createClient({ url: config.redisUrl });
+
 redis.on('error', (err) => console.error('Redis Client Error', err));
 await redis.connect();
+
+
 
 /**
  * Fetches the latest state for an array of device IDs

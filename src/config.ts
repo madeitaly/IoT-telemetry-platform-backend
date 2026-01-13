@@ -13,6 +13,8 @@ export const config = {
   // Use local DB if URL isn't provided, or force logic based on ENV
   databaseUrl: process.env.DATABASE_URL || process.env.DATABASE_URL_LOCAL,
   redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
-  
+  redisUser: process.env.REDIS_USER || 'default',
+  redisPassword: process.env.REDIS_PASSWORD,
+
   jwtSecret: process.env.JWT_SECRET || 'dev_secret_only',
 };
