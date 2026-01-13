@@ -15,6 +15,8 @@ export const config = {
   redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
   redisUser: process.env.REDIS_USER || 'default',
   redisPassword: process.env.REDIS_PASSWORD,
+  redisHost: process.env.REDIS_HOST,
+  redisPort: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : undefined,
 
   jwtSecret: process.env.JWT_SECRET || 'dev_secret_only',
 };
