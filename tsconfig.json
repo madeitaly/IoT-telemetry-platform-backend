@@ -60,7 +60,7 @@
   },
   "include": [
     "src/**/*"                                      /* Include all files inside the src directory */
-  ],
+, "src/seed.ts"  ],
   "exclude": [
     "node_modules",
     "prisma.config.ts", // Tell tsc to ignore this file during the build

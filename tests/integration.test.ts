@@ -1,17 +1,23 @@
 import request from 'supertest';
 import app from '../src/app';
-import { clearDatabase } from './prisma-setup';
+//import { clearDatabase } from './prisma-setup';
 
 describe('IoT Platform Full Handshake', () => {
   
-  // Clear DB before starting
-  beforeAll(async () => {
-    await clearDatabase();
-  });
+  // //Clear DB before starting
+  // beforeAll(async () => {
+  //   await clearDatabase();
+  // });
 
   let userToken: string;
+  let userId: number;
+
   let adminToken: string;
+  let adminId: number;
+
   let createdDeviceId: string;
+  let createdDeviceToken: string;
+  
 
   // --- 1. AUTH & ROLE TESTING ---
   describe('Authentication & Roles', () => {
@@ -87,32 +93,62 @@ describe('IoT Platform Full Handshake', () => {
     });
   });
 
-  // // --- 2. DEVICE LIFECYCLE (USER) ---
-  // describe('Device Management (User Flow)', () => {
-  //   it('should create a new device', async () => {
-  //     const res = await request(app)
-  //       .post('/api/devices')
-  //       .set('Authorization', `Bearer ${userToken}`)
-  //       .send({
-  //         name: 'Test Sensor 01',
-  //         type: 'temperature-sensor'
-  //       });
+  // --- 2. DEVICE LIFECYCLE (USER) ---
+  describe('Device Management (User Flow)', () => {
+    
+    it('should login USER and get JWT', async () => {
+      const res = await request(app).post('/auth/login').send({
+        email: 'user@test.com',
+        password: 'password123'
+      });
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('token');
+      userToken = res.body.token; // Save for future requests
+      userId = res.body.user.id; // Save for future requests
+    });
 
-  //     expect(res.status).toBe(201);
-  //     expect(res.body).toHaveProperty('id');
-  //     createdDeviceId = res.body.id;
-  //   });
+    it('should create a new device', async () => {
+      const res = await request(app)
+        .post('/api/devices')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          serial: 'SN-000000-99',
+          name: 'Test Sensor 01',
+          location: 'my-home',
+          ownerId: userId
+        });
 
-  //   it('should list devices', async () => {
-  //     const res = await request(app)
-  //       .get('/api/devices')
-  //       .set('Authorization', `Bearer ${userToken}`);
+      expect(res.status).toBe(201);
+      expect(res.body).toHaveProperty('id');
+      createdDeviceId = res.body.id;
+      createdDeviceToken = res.body.registrationToken;
+    });
+
+    it('should list devices', async () => {
+      const res = await request(app)
+        .get('/api/devices')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          ownerId: userId
+        });;
       
-  //     expect(res.status).toBe(200);
-  //     expect(Array.isArray(res.body)).toBe(true);
-  //     expect(res.body.length).toBeGreaterThan(0);
-  //   });
-  // });
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBeGreaterThan(0);
+    });
+
+    it('should list a single device', async () => {
+      const res = await request(app)
+        .get('/api/devices/'+createdDeviceId)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          ownerId: userId
+        });;
+      
+      expect(res.status).toBe(200);
+      expect(res.body.id).toBe(createdDeviceId);
+    });
+  });
 
   // // --- 3. TELEMETRY & ZOD VALIDATION ---
   // describe('Telemetry Ingestion', () => {

@@ -6,6 +6,8 @@ export declare const config: {
     redisUrl: string;
     redisUser: string;
     redisPassword: string | undefined;
+    redisHost: string | undefined;
+    redisPort: number | undefined;
     jwtSecret: string;
 };
 //# sourceMappingURL=config.d.ts.map

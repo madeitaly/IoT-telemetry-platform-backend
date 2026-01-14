@@ -1,10 +1,10 @@
-import { config } from '../src/config.js';
+import { config } from './config.js';
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient } from '../src/generated/prisma/client.js';
+import { PrismaClient } from './generated/prisma/client.js';
 import * as bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
-const connectionString = `${process.env.DATABASE_URL}`;
+const connectionString = config.databaseUrl;
 
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({adapter});
