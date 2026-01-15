@@ -55,7 +55,7 @@ jobs:
     # Set up environment variables for the test run
     - name: Run Tests
       env:
-        NODE_ENV: test
+        NODE_ENV: development
         DATABASE_URL: postgres://test_user:test_password@localhost:5432/test_db
         JWT_SECRET: "super_secret_test_key"
         PORT: 3000
