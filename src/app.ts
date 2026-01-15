@@ -15,7 +15,7 @@ import { authorizeRoles } from './auth.middleware.js';
 import * as adminCtrl from './admin.controller.js';
 import { validate } from './validate.middleware.js';
 import { TelemetrySchema } from './schemas.js'
-import cors from 'cors';
+//import cors from 'cors';
 
 
 const app = express()
