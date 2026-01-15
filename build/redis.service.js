@@ -1,19 +1,18 @@
 import { createClient } from 'redis';
 import { config } from './config.js';
 let redis;
-if (config.isProduction) {
-    redis = createClient({
-        username: config.redisUser,
-        password: config.redisPassword,
-        socket: {
-            host: config.redisHost,
-            port: config.redisPort,
-        },
-    });
-}
-else {
-    redis = createClient({ url: config.redisUrl });
-}
+//if (config.isProduction) {
+// redis = createClient({
+//   username: config.redisUser,
+//   password: config.redisPassword,
+//   socket: {
+//     host: config.redisHost,
+//     port: config.redisPort,
+//   },
+// });
+//} else {
+redis = createClient({ url: config.redisUrl });
+//}
 redis.on('error', (err) => console.error('Redis Client Error', err));
 await redis.connect();
 /**

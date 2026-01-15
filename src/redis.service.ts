@@ -1,26 +1,22 @@
-import { createClient} from 'redis';
-import type { RedisClientType } from 'redis';
 import {config} from './config.js';
+import { createClient} from 'redis';
 
 
-let redis: RedisClientType;
-
-if (config.isProduction) {
-  redis = createClient({
-    username: config.redisUser,
-    password: config.redisPassword,
-    socket: {
-      host: config.redisHost,
-      port: config.redisPort,
-    },
-  });
-} else {
-  redis = createClient({ url: config.redisUrl });
+if (!config.redisUrl) {
+  if (config.isProduction) {
+    throw new Error(
+      'REDIS_URL environment variable is not set in production. This is required for Redis connection.'
+    );
+  } else {
+    // This case should not be reachable given the default in config.ts, but acts as a safeguard.
+    throw new Error('redisUrl is not configured. This should not happen in development.');
+  }
 }
+
+const redis = createClient({ url: config.redisUrl });
 
 redis.on('error', (err) => console.error('Redis Client Error', err));
 await redis.connect();
-
 
 
 /**

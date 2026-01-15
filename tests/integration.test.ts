@@ -1,13 +1,8 @@
 import request from 'supertest';
 import app from '../src/app';
-//import { clearDatabase } from './prisma-setup';
 
 describe('IoT Platform Full Handshake', () => {
   
-  // //Clear DB before starting
-  // beforeAll(async () => {
-  //   await clearDatabase();
-  // });
 
   let userToken: string;
   let userId: number;
@@ -98,7 +93,7 @@ describe('IoT Platform Full Handshake', () => {
     
     it('should login USER and get JWT', async () => {
       const res = await request(app).post('/auth/login').send({
-        email: 'user@test.com',
+        email: 'user10@example.com',
         password: 'password123'
       });
       expect(res.status).toBe(200);
@@ -112,8 +107,8 @@ describe('IoT Platform Full Handshake', () => {
         .post('/api/devices')
         .set('Authorization', `Bearer ${userToken}`)
         .send({
-          serial: 'SN-000000-99',
-          name: 'Test Sensor 01',
+          serial: 'SN-000000-00',
+          name: 'Test Sensor 00',
           location: 'my-home',
           ownerId: userId
         });
@@ -134,7 +129,7 @@ describe('IoT Platform Full Handshake', () => {
       
       expect(res.status).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
-      expect(res.body.length).toBeGreaterThan(0);
+      expect(res.body.length).toBeGreaterThan(10);
     });
 
     it('should list a single device', async () => {
@@ -143,7 +138,7 @@ describe('IoT Platform Full Handshake', () => {
         .set('Authorization', `Bearer ${userToken}`)
         .send({
           ownerId: userId
-        });;
+        });
       
       expect(res.status).toBe(200);
       expect(res.body.id).toBe(createdDeviceId);

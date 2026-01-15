@@ -8,19 +8,19 @@ export const TelemetrySchema = z.object({
   payload: z.record(z.string(),z.any()).optional(), // Flexible JSON
 });
 
-// 2. Device Creation Validation
-export const CreateDeviceSchema = z.object({
-  serial: z.string().min(5).max(50),
-  name: z.string().min(2).max(100),
-  location: z.string().optional(),
-});
+// // 2. Device Creation Validation
+// export const CreateDeviceSchema = z.object({
+//   serial: z.string().min(5).max(50),
+//   name: z.string().min(2).max(100),
+//   location: z.string().optional(),
+// });
 
-// 3. Auth Validation
-export const RegisterSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-});
+// // 3. Auth Validation
+// export const RegisterSchema = z.object({
+//   email: z.string().email(),
+//   password: z.string().min(8),
+// });
 
 // Extract Types automatically
 export type TelemetryInput = z.infer<typeof TelemetrySchema>;
-export type CreateDeviceInput = z.infer<typeof CreateDeviceSchema>;
+//export type CreateDeviceInput = z.infer<typeof CreateDeviceSchema>;

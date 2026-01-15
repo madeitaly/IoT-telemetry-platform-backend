@@ -7,7 +7,7 @@ import { authenticateToken } from './auth.middleware.js';
 import { authorizeRoles } from './auth.middleware.js';
 import * as adminCtrl from './admin.controller.js';
 import { validate } from './validate.middleware.js';
-import { TelemetrySchema, CreateDeviceSchema, RegisterSchema } from './schemas.js';
+import { TelemetrySchema } from './schemas.js';
 import cors from 'cors';
 const app = express();
 // MIDDLEWARE //
@@ -23,7 +23,7 @@ app.use(express.json());
 //  ROUTING OF THE HTTPS REQUESTS ///
 /////////////////////////////////////
 // --- Public Routes ---
-app.post('/auth/register', validate(RegisterSchema), register);
+app.post('/auth/register', register);
 app.post('/auth/login', login);
 // --- Device Ingestion (Uses Device Token) ---
 app.post('/api/telemetry', validate(TelemetrySchema), ingestTelemetry);
@@ -39,7 +39,7 @@ app.get('/api/devices/status-summary', authenticateToken, getFleetStatus);
 app.delete('/api/admin/users/:id', authorizeRoles('ADMIN'), adminCtrl.deleteUser);
 app.delete('/api/admin/devices/:id', authorizeRoles('ADMIN'), adminCtrl.adminDeleteDevice);
 // --- Protected Device Routes ---
-app.post('/api/devices', validate(CreateDeviceSchema), createDevice);
+app.post('/api/devices', createDevice);
 app.get('/api/devices', getDevices);
 app.get('/api/devices/:id', getDevice);
 app.patch('/api/devices/:id', updateDevice);

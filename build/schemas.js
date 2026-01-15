@@ -6,15 +6,5 @@ export const TelemetrySchema = z.object({
     battery: z.number().min(0).max(100).optional(),
     payload: z.record(z.string(), z.any()).optional(), // Flexible JSON
 });
-// 2. Device Creation Validation
-export const CreateDeviceSchema = z.object({
-    serial: z.string().min(5).max(50),
-    name: z.string().min(2).max(100),
-    location: z.string().optional(),
-});
-// 3. Auth Validation
-export const RegisterSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8),
-});
+//export type CreateDeviceInput = z.infer<typeof CreateDeviceSchema>;
 //# sourceMappingURL=schemas.js.map

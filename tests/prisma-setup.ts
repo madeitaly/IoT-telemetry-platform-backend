@@ -1,3 +1,4 @@
+// TO BE DELETED
 import { config } from '../src/config.js';
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '../src/generated/prisma/client.js';
