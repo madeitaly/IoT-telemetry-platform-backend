@@ -1,6 +1,6 @@
 import morgan from "morgan";
 import express from "express";
-import { register, login, getProfile } from './auth.controller.js';
+import { register, login, logout, getProfile } from './auth.controller.js';
 import { 
     createDevice, 
     getDevices, 
@@ -61,6 +61,7 @@ app.delete('/api/admin/users/:id', authorizeRoles('ADMIN'), adminCtrl.deleteUser
 app.delete('/api/admin/devices/:id', authorizeRoles('ADMIN'), adminCtrl.adminDeleteDevice);
 
 // --- Protected Device Routes ---
+app.post('/auth/logout', authenticateToken, logout);
 app.post('/api/devices', createDevice);
 app.get('/api/devices', getDevices);
 app.get('/api/devices/:id', getDevice);

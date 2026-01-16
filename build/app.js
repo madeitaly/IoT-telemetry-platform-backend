@@ -1,6 +1,6 @@
 import morgan from "morgan";
 import express from "express";
-import { register, login, getProfile } from './auth.controller.js';
+import { register, login, logout, getProfile } from './auth.controller.js';
 import { createDevice, getDevices, getDevice, updateDevice, deleteDevice, getFleetStatus } from './device.controller.js';
 import { ingestTelemetry, fetchTelemetry } from './telemetry.controller.js';
 import { authenticateToken } from './auth.middleware.js';
@@ -8,7 +8,7 @@ import { authorizeRoles } from './auth.middleware.js';
 import * as adminCtrl from './admin.controller.js';
 import { validate } from './validate.middleware.js';
 import { TelemetrySchema } from './schemas.js';
-import cors from 'cors';
+//import cors from 'cors';
 const app = express();
 // MIDDLEWARE //
 app.use(morgan("dev"));
@@ -39,6 +39,7 @@ app.get('/api/devices/status-summary', authenticateToken, getFleetStatus);
 app.delete('/api/admin/users/:id', authorizeRoles('ADMIN'), adminCtrl.deleteUser);
 app.delete('/api/admin/devices/:id', authorizeRoles('ADMIN'), adminCtrl.adminDeleteDevice);
 // --- Protected Device Routes ---
+app.post('/auth/logout', authenticateToken, logout);
 app.post('/api/devices', createDevice);
 app.get('/api/devices', getDevices);
 app.get('/api/devices/:id', getDevice);

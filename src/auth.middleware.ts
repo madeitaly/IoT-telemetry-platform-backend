@@ -4,6 +4,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import {prisma} from './prisma-client.js';
+import { isTokenBlacklisted } from './redis.service.js'; // Import this
 
 // Extend the Express Request interface to include the authenticated user's ID
 interface AuthRequest extends Request {
@@ -16,7 +17,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'YOUR_VERY_STRONG_SECRET';
 /**
  * Middleware to verify a JWT and attach the userId to the request.
  */
-export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authenticateToken = async (req: AuthRequest, res: Response, next: NextFunction) => {
     // 1. Get the Authorization header
     const authHeader = req.headers['authorization'];
     // Format: 'Bearer <TOKEN>'
@@ -24,6 +25,12 @@ export const authenticateToken = (req: AuthRequest, res: Response, next: NextFun
 
     if (token == null) {
         return res.status(401).json({ error: 'Access Denied. No token provided.' });
+    }
+
+    // 2. Check Blacklist BEFORE verifying (or after, both work)
+    const isBlacklisted = await isTokenBlacklisted(token);
+    if (isBlacklisted) {
+        return res.status(401).json({ error: 'Session expired (Logged out)' });
     }
 
     // 2. Verify the token

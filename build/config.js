@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const ENV = process.env.NODE_ENV ?? 'development';
 const isProduction = ENV === 'production';
+console.log(process.env.NODE_ENV);
 export const config = {
     isProduction,
     isDevelopment: !isProduction,
@@ -9,7 +10,9 @@ export const config = {
     databaseUrl: isProduction
         ? process.env.DATABASE_URL
         : process.env.DATABASE_URL_LOCAL,
-    redisUrl: process.env.REDIS_URL ?? (isProduction ? undefined : 'redis://localhost:6379'),
+    redisUrl: isProduction
+        ? process.env.REDIS_URL
+        : process.env.REDIS_URL_LOCAL,
     jwtSecret: isProduction ? process.env.JWT_SECRET : 'dev_secret_only',
 };
 //# sourceMappingURL=config.js.map

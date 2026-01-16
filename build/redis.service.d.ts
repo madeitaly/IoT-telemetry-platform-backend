@@ -2319,5 +2319,15 @@ export declare function getLatestStates(deviceIds: number[]): Promise<{
     deviceId: number;
     state: any;
 }[]>;
+/**
+ * Adds a token to the blacklist until it naturally expires.
+ * @param token The JWT string
+ * @param expiresInSeconds Duration in seconds until the token expires
+ */
+export declare function blacklistToken(token: string, expiresInSeconds: number): Promise<void>;
+/**
+ * Checks if a token is in the blacklist.
+ */
+export declare function isTokenBlacklisted(token: string): Promise<boolean>;
 export default redis;
 //# sourceMappingURL=redis.service.d.ts.map

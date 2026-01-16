@@ -1,1 +1,1 @@
-{"version":3,"file":"queue.d.ts","sourceRoot":"","sources":["../src/queue.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,KAAK,EAAU,MAAM,QAAQ,CAAC;AAMvC,eAAO,MAAM,cAAc,2CAAmD,CAAC"}
+{"version":3,"file":"queue.d.ts","sourceRoot":"","sources":["../src/queue.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,KAAK,EAAU,MAAM,QAAQ,CAAC;AAOvC,eAAO,MAAM,cAAc,2CAAmD,CAAC"}

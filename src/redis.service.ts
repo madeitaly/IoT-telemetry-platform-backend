@@ -39,4 +39,25 @@ export async function getLatestStates(deviceIds: number[]) {
     });
 }
 
+
+/**
+ * Adds a token to the blacklist until it naturally expires.
+ * @param token The JWT string
+ * @param expiresInSeconds Duration in seconds until the token expires
+ */
+export async function blacklistToken(token: string, expiresInSeconds: number) {
+    const key = `blacklist:${token}`;
+    // We set the value to '1', but the important part is the Expiration (EX)
+    await redis.set(key, '1', { EX: expiresInSeconds });
+}
+
+/**
+ * Checks if a token is in the blacklist.
+ */
+export async function isTokenBlacklisted(token: string): Promise<boolean> {
+    const key = `blacklist:${token}`;
+    const result = await redis.get(key);
+    return result !== null;
+}
+
 export default redis;

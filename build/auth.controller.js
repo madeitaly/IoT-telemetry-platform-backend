@@ -1,4 +1,6 @@
 import { hashPassword, comparePassword, createToken, findUserByEmail, findUserById, createUser, } from './auth.service.js';
+import * as jwt from 'jsonwebtoken';
+import { blacklistToken } from './redis.service.js';
 /**
  * POST /auth/register
  * Handles user registration: Hashing password and storing user in DB.
@@ -64,6 +66,34 @@ export async function login(req, res) {
     catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ error: 'Internal server error during login.' });
+    }
+}
+/**
+ * POST /auth/logout
+ * Handles user logout: get JWT and add to blacklist if not expired.
+ */
+export async function logout(req, res) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token)
+        return res.status(400).json({ error: 'No token provided' });
+    try {
+        // Decode without verifying signature (we just need the payload 'exp')
+        const decoded = jwt.decode(token);
+        if (!decoded || !decoded.exp) {
+            return res.status(400).json({ error: 'Invalid token structure' });
+        }
+        // Calculate time remaining in seconds
+        const nowInSeconds = Math.floor(Date.now() / 1000);
+        const timeToLive = decoded.exp - nowInSeconds;
+        if (timeToLive > 0) {
+            // Add to Redis Blacklist
+            await blacklistToken(token, timeToLive);
+        }
+        res.status(200).json({ message: 'Logged out successfully' });
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Logout failed' });
     }
 }
 /**
