@@ -9,7 +9,6 @@ if (!config.redisUrl) {
         throw new Error('redisUrl is not configured. This should not happen in development.');
     }
 }
-console.log(config.redisUrl);
 const redis = createClient({ url: config.redisUrl });
 redis.on('error', (err) => console.error('Redis Client Error', err));
 await redis.connect();

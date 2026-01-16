@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 const ENV = process.env.NODE_ENV ?? 'development';
 const isProduction = ENV === 'production';
-console.log(process.env.NODE_ENV);
 export const config = {
     isProduction,
     isDevelopment: !isProduction,

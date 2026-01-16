@@ -2,7 +2,6 @@ import { config } from './config.js';
 import { Queue, Worker } from 'bullmq';
 import { prisma } from './prisma-client.js';
 const connection = { url: config.redisUrl };
-console.log(config.redisUrl);
 // 1. Define the Queue
 export const telemetryQueue = new Queue('telemetry-ingestion', { connection });
 // 2. Define the Worker (The "Background Processor")
