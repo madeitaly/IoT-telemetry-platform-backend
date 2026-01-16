@@ -8,7 +8,9 @@
   "main": "server.js",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand --detectOpenHandles --forceExit",
-    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
+    "dev": "npx tsx src/server.ts",
+    "build": "tsc",
+    "start": "node build/server.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.1.0",
