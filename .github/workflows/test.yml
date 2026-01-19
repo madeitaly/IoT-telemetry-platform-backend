@@ -50,13 +50,14 @@ jobs:
         cache: 'npm'
 
     - name: Install Dependencies
-      run: npm ci
+      run: npm installci
 
     # Set up environment variables for the test run
     - name: Run Tests
       env:
         NODE_ENV: development
         DATABASE_URL_LOCAL: postgres://test_user:test_password@localhost:5432/test_db
+        DATABASE_URL: postgres://test_user:test_password@localhost:5432/test_db #Used for Prisma.config.ts
         JWT_SECRET: "super_secret_test_key"
         PORT: 3000
         REDIS_URL_LOCAL: "redis://localhost:6379"

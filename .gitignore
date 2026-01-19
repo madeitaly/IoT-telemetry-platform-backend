@@ -130,3 +130,6 @@ dist
 .pnp.*
 
 /src/generated/prisma
+
+# Build folder for production when using tsc
+build/
