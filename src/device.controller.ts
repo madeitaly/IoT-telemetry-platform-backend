@@ -55,7 +55,7 @@ export async function getDevices(req: AuthRequest, res: Response) {
 
 // --- GET /api/devices/:id ---
 export async function getDevice(req: AuthRequest, res: Response) {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string , 10);
     const ownerId = req.userId!;
 
     if (isNaN(id)) {
@@ -76,7 +76,7 @@ export async function getDevice(req: AuthRequest, res: Response) {
 
 // --- PATCH /api/devices/:id ---
 export async function updateDevice(req: AuthRequest, res: Response) {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const ownerId = req.userId!;
     const { name, location } = req.body;
 
@@ -106,7 +106,7 @@ export async function updateDevice(req: AuthRequest, res: Response) {
 
 // --- DELETE /api/devices/:id ---
 export async function deleteDevice(req: AuthRequest, res: Response) {
-    const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id as string, 10);
     const ownerId = req.userId!;
 
     if (isNaN(id)) {

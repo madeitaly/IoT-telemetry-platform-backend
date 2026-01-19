@@ -21,7 +21,7 @@ export async function ingestTelemetry(req: Request, res: Response) {
 
 
 export async function fetchTelemetry(req: Request, res: Response) {
-    const deviceId = parseInt(req.params.deviceId);
+    const deviceId = parseInt(req.params.deviceId as string);
     const { start, end } = req.query;
 
     if (isNaN(deviceId)) return res.status(400).json({ error: 'Invalid ID' });
