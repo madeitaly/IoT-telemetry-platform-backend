@@ -15,7 +15,8 @@ import { authorizeRoles } from './auth.middleware.js';
 import * as adminCtrl from './admin.controller.js';
 import { validate } from './validate.middleware.js';
 import { TelemetrySchema } from './schemas.js'
-//import cors from 'cors';
+import cors from 'cors';
+import { config } from './config.js';
 
 
 const app = express()
@@ -26,12 +27,10 @@ app.use(morgan("dev"));
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// const corsOptions = {
-//    origin: 'https://l3sglm.csb.app/',//(https://your-client-app.com)
-//    credentials: true
-//  };
+if (config.isDevelopment) {
+    app.use(cors()); // Allow all origins for development
+}
 
-// app.use(cors(corsOptions));
 
 
 /////////////////////////////////////
