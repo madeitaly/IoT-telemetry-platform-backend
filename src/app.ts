@@ -49,7 +49,7 @@ app.post('/api/telemetry', validate(TelemetrySchema), ingestTelemetry);
 app.use('/api', authenticateToken); // <-- Apply middleware to ALL /api routes
 
 // --- Protected Authentication Routes ---
-app.get('/api/profile', getProfile);
+app.get('/api/profile/:userId', getProfile);
 
 // --- USER & ADMIN ROUTES ---
 app.get('/api/devices/status-summary', authenticateToken, getFleetStatus);
@@ -62,8 +62,8 @@ app.delete('/api/admin/devices/:id', authorizeRoles('ADMIN'), adminCtrl.adminDel
 // --- Protected Device Routes ---
 app.post('/auth/logout', authenticateToken, logout);
 app.post('/api/devices', createDevice);
-app.get('/api/devices', getDevices);
-app.get('/api/devices/:id', getDevice);
+app.get('/api/devices/:userId', getDevices);
+app.get('/api/devices/:userId/:deviceId', getDevice);
 app.patch('/api/devices/:id', updateDevice);
 app.delete('/api/devices/:id', deleteDevice);
 // Fetching telemetry history (User looking at device data)

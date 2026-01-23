@@ -74,6 +74,20 @@ describe('IoT Platform Full Handshake', () => {
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('token');
       userToken = res.body.token; // Save for future requests
+      userId = res.body.user.id; // Save for future requests
+    });
+
+    it('should get the user profile', async () => {
+      const res = await request(app)
+        .get(`/api/profile/${userId}`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.id).toBe(userId);
+      expect(res.body.email).toBeDefined();
+      
+      // Security Check: Ensure password is NOT returned
+      expect(res.body.password).toBeUndefined();
     });
 
     //Successful login of an ADMIN
@@ -121,27 +135,23 @@ describe('IoT Platform Full Handshake', () => {
 
     it('should list devices', async () => {
       const res = await request(app)
-        .get('/api/devices')
+        .get(`/api/devices/${userId}`)
         .set('Authorization', `Bearer ${userToken}`)
-        .send({
-          ownerId: userId
-        });;
       
       expect(res.status).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
       expect(res.body.length).toBeGreaterThan(0); //TO BE FIXED 
+      expect(res.body[0].ownerId).toBe(userId);
     });
 
     it('should list a single device', async () => {
       const res = await request(app)
-        .get('/api/devices/'+createdDeviceId)
+        .get(`/api/devices/${userId}/${createdDeviceId}`)
         .set('Authorization', `Bearer ${userToken}`)
-        .send({
-          ownerId: userId
-        });
       
       expect(res.status).toBe(200);
       expect(res.body.id).toBe(createdDeviceId);
+      expect(res.body.ownerId).toBe(userId);
     });
   });
 

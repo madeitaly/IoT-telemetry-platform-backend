@@ -139,15 +139,17 @@ export async function logout(req: Request, res: Response) {
  */
 export async function getProfile(req: AuthRequest, res: Response) {
     // The userId is guaranteed to be set by the authenticateToken middleware
-    const userId = req.userId; 
+    const requesterId = req.userId;
+    const targetUserId = parseInt(req.params.userId as string, 10); 
 
-    if (!userId) {
-        // This should theoretically not happen if middleware runs correctly
-        return res.status(401).json({ error: 'Unauthorized.' }); 
+    // 2. Security Check (Horizontal Privilege Escalation prevention)
+    if (targetUserId !== requesterId) {
+        // OPTIONAL: Allow if requester.role === 'ADMIN'
+        return res.status(403).json({ error: 'Forbidden: You can only view your own profile' });
     }
 
     try {
-        const user = await findUserById(userId);
+        const user = await findUserById(targetUserId);
 
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });

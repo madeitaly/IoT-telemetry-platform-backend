@@ -40,12 +40,19 @@ export async function createDevice(req: AuthRequest, res: Response) {
     }
 }
 
-// --- GET /api/devices ---
+// --- GET /api/devices/:userId ---
 export async function getDevices(req: AuthRequest, res: Response) {
-    const ownerId = req.userId!; // Guaranteed by JWT middleware
+    const targetUserId = parseInt(req.params.userId as string, 10);
+    const requesterId = req.userId!; // Guaranteed by JWT middleware
+
+    // Security Check (Horizontal Privilege Escalation prevention)
+    if (targetUserId !== requesterId) {
+        // OPTIONAL: Allow if requester.role === 'ADMIN'
+        return res.status(403).json({ error: 'Forbidden: You can only view your own devices' });
+    }
 
     try {
-        const devices = await deviceService.getDevicesByOwner(ownerId);
+        const devices = await deviceService.getDevicesByOwner(targetUserId);
         res.status(200).json(devices);
     } catch (error) {
         console.error('Get devices error:', error);
@@ -53,17 +60,20 @@ export async function getDevices(req: AuthRequest, res: Response) {
     }
 }
 
-// --- GET /api/devices/:id ---
+// --- GET /api/devices/:userId/:deviceId ---
 export async function getDevice(req: AuthRequest, res: Response) {
-    const id = parseInt(req.params.id as string , 10);
-    const ownerId = req.userId!;
+    const targetUserId = parseInt(req.params.userId as string, 10);
+    const targetDeviceId = parseInt(req.params.deviceId as string, 10);
+    const requesterId = req.userId!; // Guaranteed by JWT middleware
 
-    if (isNaN(id)) {
-        return res.status(400).json({ error: 'Invalid device ID format.' });
+    // Security Check (Horizontal Privilege Escalation prevention)
+    if (targetUserId !== requesterId) {
+        // OPTIONAL: Allow if requester.role === 'ADMIN'
+        return res.status(403).json({ error: 'Forbidden: You can only view your own device' });
     }
 
     try {
-        const device = await deviceService.getDeviceById(id, ownerId);
+        const device = await deviceService.getDeviceById(targetDeviceId, targetUserId);
         if (!device) {
             return handleNotFound(res);
         }
