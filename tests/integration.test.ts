@@ -118,13 +118,12 @@ describe('IoT Platform Full Handshake', () => {
 
     it('should create a new device', async () => {
       const res = await request(app)
-        .post('/api/devices')
+        .post(`/api/devices/${userId}`)
         .set('Authorization', `Bearer ${userToken}`)
         .send({
-          serial: 'SN-000000-00',
-          name: 'Test Sensor 00',
-          location: 'my-home',
-          ownerId: userId
+          serial: 'SN-000000-01',
+          name: 'Test Sensor 01',
+          location: 'my-home'
         });
 
       expect(res.status).toBe(201);
@@ -132,6 +131,41 @@ describe('IoT Platform Full Handshake', () => {
       createdDeviceId = res.body.id;
       createdDeviceToken = res.body.registrationToken;
     });
+
+    it('should retrieve the device token separately', async () => {
+      const res = await request(app)
+        .get(`/api/devices/${userId}/${createdDeviceId}/deviceToken`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.token).toBeDefined();
+      expect(typeof res.body.token).toBe('string');
+    });
+
+    it('should update the device name', async () => {
+      const res = await request(app)
+        .patch(`/api/devices/${userId}/${createdDeviceId}`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          name: 'Test Sensor 02',
+        });
+
+      expect(res.status).toBe(200);
+      expect(res.body.name).toBe('Test Sensor 02');
+    });
+
+    it('should update the device location', async () => {
+      const res = await request(app)
+        .patch(`/api/devices/${userId}/${createdDeviceId}`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          location: 'my-car'
+        });
+
+      expect(res.status).toBe(200);
+      expect(res.body.location).toBe('my-car');
+    });
+
 
     it('should list devices', async () => {
       const res = await request(app)

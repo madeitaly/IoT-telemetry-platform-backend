@@ -13,13 +13,21 @@ const handleNotFound = (res: Response) => {
     return res.status(404).json({ error: 'Device not found or not owned by user.' });
 };
 
-// --- POST /api/devices ---
+// --- POST /api/devices/:userId ---
 export async function createDevice(req: AuthRequest, res: Response) {
     const { serial, name, location } = req.body;
-    const ownerId = req.userId; // Guaranteed by JWT middleware
+    //const ownerId = req.userId; // Guaranteed by JWT middleware
+    const targetUserId = parseInt(req.params.userId as string, 10);
+    const requesterId = req.userId!; // Guaranteed by JWT middleware
 
-    if (!ownerId || !serial || !name) {
+    if (!targetUserId || !serial || !name) {
         return res.status(400).json({ error: 'Missing required fields (serial, name).' });
+    }
+
+    // Security Check (Horizontal Privilege Escalation prevention)
+    if (targetUserId !== requesterId) {
+        // OPTIONAL: Allow if requester.role === 'ADMIN'
+        return res.status(403).json({ error: 'Forbidden: You can only create your own devices' });
     }
 
     try {
@@ -27,7 +35,7 @@ export async function createDevice(req: AuthRequest, res: Response) {
             serial,
             name,
             location,
-            ownerId,
+            ownerId:  targetUserId,
         });
         res.status(201).json(newDevice);
     } catch (error) {
@@ -39,6 +47,50 @@ export async function createDevice(req: AuthRequest, res: Response) {
         res.status(500).json({ error: 'Internal server error.' });
     }
 }
+
+/**
+ * GET /api/devices/:userId/:deviceId/token
+ * Retrieves the specific token for a device.
+ */
+export async function getDeviceToken(req: any, res: any) {
+    const targetUserId = parseInt(req.params.userId as string, 10);
+    const targetDeviceId = parseInt(req.params.deviceId as string, 10);
+    const requesterId = req.userId;
+
+    // 1. Security Check (Horizontal Privilege Escalation prevention)
+    if (targetUserId !== requesterId) {
+        return res.status(403).json({ error: 'Forbidden: You can only get deviceToken of your own devices' });
+    }
+
+    try{
+
+        //Check that the deviceId belongs to the userId
+        const device = await deviceService.getDeviceById(targetDeviceId, targetUserId);
+        if (!device) {
+            return handleNotFound(res);
+        }
+        //res.status(200).json(device);
+
+        try {
+            const deviceToken = await deviceService.getDeviceTokenById(targetDeviceId);
+            if (!deviceToken) {
+            return handleNotFound(res);
+        }
+        res.status(200).json(deviceToken);
+
+        } catch (error) {
+            console.error('Retrieve deviceToken error:', error);
+            res.status(500).json({ error: 'Failed to retrieve token' });
+        }
+        
+    } catch (error) {
+        
+        console.error('Get device error:', error);
+            res.status(500).json({ error: 'Internal server error.' });
+    }
+
+}
+
 
 // --- GET /api/devices/:userId ---
 export async function getDevices(req: AuthRequest, res: Response) {
@@ -84,13 +136,14 @@ export async function getDevice(req: AuthRequest, res: Response) {
     }
 }
 
-// --- PATCH /api/devices/:id ---
+// --- PATCH /api/devices/:userId/:deviceID ---
 export async function updateDevice(req: AuthRequest, res: Response) {
-    const id = parseInt(req.params.id as string, 10);
-    const ownerId = req.userId!;
+    const targetUserId = parseInt(req.params.userId as string, 10);
+    const targetDeviceId = parseInt(req.params.deviceId as string, 10);
+    const requesterId = req.userId!;
     const { name, location } = req.body;
 
-    if (isNaN(id)) {
+    if (isNaN(targetDeviceId)) {
         return res.status(400).json({ error: 'Invalid device ID format.' });
     }
 
@@ -101,8 +154,14 @@ export async function updateDevice(req: AuthRequest, res: Response) {
     // Only include fields that were actually sent in the request body
     const updateData = { name, location };
 
+    // Security Check (Horizontal Privilege Escalation prevention)
+    if (targetUserId !== requesterId) {
+        // OPTIONAL: Allow if requester.role === 'ADMIN'
+        return res.status(403).json({ error: 'Forbidden: You can only update your own device' });
+    }
+
     try {
-        const updatedDevice = await deviceService.updateDevice(id, ownerId, updateData);
+        const updatedDevice = await deviceService.updateDevice(targetDeviceId, targetUserId, updateData);
         res.status(200).json(updatedDevice);
     } catch (error) {
         // Prisma error P2025: Record not found (or not matching where clause)

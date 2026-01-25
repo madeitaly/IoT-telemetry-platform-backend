@@ -4,7 +4,8 @@ import { register, login, logout, getProfile } from './auth.controller.js';
 import { 
     createDevice, 
     getDevices, 
-    getDevice, 
+    getDevice,
+    getDeviceToken, 
     updateDevice, 
     deleteDevice,
     getFleetStatus 
@@ -61,10 +62,11 @@ app.delete('/api/admin/devices/:id', authorizeRoles('ADMIN'), adminCtrl.adminDel
 
 // --- Protected Device Routes ---
 app.post('/auth/logout', authenticateToken, logout);
-app.post('/api/devices', createDevice);
+app.post('/api/devices/:userId', createDevice);
 app.get('/api/devices/:userId', getDevices);
 app.get('/api/devices/:userId/:deviceId', getDevice);
-app.patch('/api/devices/:id', updateDevice);
+app.get('/api/devices/:userId/:deviceId/deviceToken', getDeviceToken);
+app.patch('/api/devices/:userId/:deviceId', updateDevice);
 app.delete('/api/devices/:id', deleteDevice);
 // Fetching telemetry history (User looking at device data)
 app.get('/api/telemetry/:deviceId', fetchTelemetry);

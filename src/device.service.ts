@@ -21,7 +21,7 @@ type DeviceUpdateInput = {
 ////////////////////////////
 
 
-/** POST /api/devices: Creates a new device owned by a user. */
+/** POST /api/devices/:userId Creates a new device owned by a user. */
 export async function createDevice(data: DeviceCreateInput): Promise<Device> {
     // We use a transaction to ensure both records are created together
     return prisma.$transaction(async (tx) => {
@@ -44,6 +44,19 @@ export async function createDevice(data: DeviceCreateInput): Promise<Device> {
 
         // Return both so the controller can show the token to the user once
         return { ...device, registrationToken: tokenRecord.token };
+    });
+}
+
+/** GET /api/devices/:userId/:deviceId/deviceToken Finds a token beloging to a specific device. */
+export async function getDeviceTokenById(deviceId: number): Promise<DeviceRegistrationToken | null> {
+    return prisma.deviceRegistrationToken.findFirst({
+        where: { 
+            deviceId: deviceId 
+        },
+        // Good practice: If multiple tokens exist, get the latest one
+        orderBy: {
+            id: 'desc' 
+        }
     });
 }
 
