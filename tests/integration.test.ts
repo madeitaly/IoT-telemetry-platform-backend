@@ -90,6 +90,24 @@ describe('IoT Platform Full Handshake', () => {
       expect(res.body.password).toBeUndefined();
     });
 
+    it('should logout the user', async () => {
+      const res = await request(app)
+        .post('/auth/logout')
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.message).toBe('Logged out successfully');
+    });
+
+    it('should fail to get the user profile', async () => {
+      const res = await request(app)
+        .get(`/api/profile/${userId}`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(401);
+      expect(res.body.error).toBe('Session expired (Logged out)');
+    });
+
     //Successful login of an ADMIN
     it('should login ADMIN and get JWT', async () => {
       const res = await request(app).post('/auth/login').send({
@@ -206,7 +224,7 @@ describe('IoT Platform Full Handshake', () => {
 
       expect(res.status).toBe(404);
     });
-    
+
   });
 
   // // --- 3. TELEMETRY & ZOD VALIDATION ---
