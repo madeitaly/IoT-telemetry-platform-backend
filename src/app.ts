@@ -13,7 +13,7 @@ import {
 import { ingestTelemetry, fetchTelemetry } from './telemetry.controller.js';
 import { authenticateToken } from './auth.middleware.js';
 import { authorizeRoles } from './auth.middleware.js';
-import * as adminCtrl from './admin.controller.js';
+import { adminDeleteUser, adminDeleteDevice } from './admin.controller.js';
 import { validate } from './validate.middleware.js';
 import { TelemetrySchema } from './schemas.js'
 import cors from 'cors';
@@ -57,8 +57,8 @@ app.get('/api/devices/status-summary', authenticateToken, getFleetStatus);
 
 // --- ADMIN ONLY ROUTES ---
 // We chain the authorizeRoles middleware
-app.delete('/api/admin/users/:id', authorizeRoles('ADMIN'), adminCtrl.deleteUser);
-app.delete('/api/admin/devices/:id', authorizeRoles('ADMIN'), adminCtrl.adminDeleteDevice);
+app.delete('/api/admin/users/:userId', authorizeRoles('ADMIN'), adminDeleteUser);
+app.delete('/api/admin/devices/:deviceId', authorizeRoles('ADMIN'), adminDeleteDevice);
 
 // --- Protected Device Routes ---
 app.post('/auth/logout', authenticateToken, logout);

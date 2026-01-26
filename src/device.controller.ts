@@ -190,10 +190,7 @@ export async function deleteDevice(req: AuthRequest, res: Response) {
     }
 
     try {
-        const deletedDevice = await deviceService.deleteDeviceWithTokens(
-            targetDeviceId,
-            targetUserId
-        );
+        const deletedDevice = await deviceService.deleteDeviceWithTokens(targetDeviceId);
         
         return res.status(200).json({
             message: 'Device deleted successfully.',

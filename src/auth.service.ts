@@ -71,3 +71,14 @@ export async function createUser(email: string, passwordHash: string): Promise<U
         },
     });
 }
+
+/**
+ * Delete a user in the database.
+ */
+export async function deleteUser(userId: number): Promise<User> {
+    return prisma.user.delete({
+        where: {
+            id: userId,
+        },
+    });
+}
