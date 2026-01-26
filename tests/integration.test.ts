@@ -121,8 +121,8 @@ describe('IoT Platform Full Handshake', () => {
         .post(`/api/devices/${userId}`)
         .set('Authorization', `Bearer ${userToken}`)
         .send({
-          serial: 'SN-000000-01',
-          name: 'Test Sensor 01',
+          serial: 'SN-000000-11',
+          name: 'Test Sensor 11',
           location: 'my-home'
         });
 
@@ -166,7 +166,6 @@ describe('IoT Platform Full Handshake', () => {
       expect(res.body.location).toBe('my-car');
     });
 
-
     it('should list devices', async () => {
       const res = await request(app)
         .get(`/api/devices/${userId}`)
@@ -187,6 +186,27 @@ describe('IoT Platform Full Handshake', () => {
       expect(res.body.id).toBe(createdDeviceId);
       expect(res.body.ownerId).toBe(userId);
     });
+
+    it('should delete a device', async () => {
+      const res = await request(app)
+        .delete(`/api/devices/${userId}/${createdDeviceId}`)
+        .set('Authorization', `Bearer ${userToken}`);
+      
+      expect(res.status).toBe(200);
+      expect(res.body.message).toBe('Device deleted successfully.');
+      expect(res.body.deleted).toBeDefined();
+      expect(res.body.deleted.id).toBe(createdDeviceId);
+    });
+
+    it('should return 404 when trying to get the deleted device', async () => {
+      // 3. Verify it's actually gone
+      const res = await request(app)
+        .get(`/api/devices/${userId}/${createdDeviceId}`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(404);
+    });
+    
   });
 
   // // --- 3. TELEMETRY & ZOD VALIDATION ---

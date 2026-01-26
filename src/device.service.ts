@@ -93,12 +93,37 @@ export async function updateDevice(
     });
 }
 
-/** DELETE /api/devices/:id: Deletes a device. */
-export async function deleteDevice(id: number, ownerId: number): Promise<Device> {
-    return prisma.device.delete({
-        where: {
-            id: id,
-            ownerId: ownerId, // Security check
-        },
+// /** DELETE /api/devices/:userID/:deviceID : Deletes a device. */
+// export async function deleteDevice(id: number, ownerId: number): Promise<Device> {
+//     return prisma.device.delete({
+//         where: {
+//             id: id,
+//             ownerId: ownerId, // Security check
+//         },
+//     });
+// }
+
+// /** DELETE Deletes a device Token. */
+// export async function deleteDeviceToken(id: number): Promise<DeviceRegistrationToken> {
+//     return prisma.deviceRegistrationToken.delete({
+//         where: {
+//             deviceId: id
+//         },
+//     });
+// }
+
+/** DELETE /api/devices/:userID/:deviceID : Deletes a device. */
+export async function deleteDeviceWithTokens(deviceId: number, userId: number) {
+  return prisma.$transaction(async (tx) => {  
+    await tx.deviceRegistrationToken.deleteMany({
+      where: { deviceId },
     });
+
+    return tx.device.delete({
+      where: {
+        id: deviceId,
+        ownerId: userId,
+      },
+    });
+  });
 }

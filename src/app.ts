@@ -67,7 +67,7 @@ app.get('/api/devices/:userId', getDevices);
 app.get('/api/devices/:userId/:deviceId', getDevice);
 app.get('/api/devices/:userId/:deviceId/deviceToken', getDeviceToken);
 app.patch('/api/devices/:userId/:deviceId', updateDevice);
-app.delete('/api/devices/:id', deleteDevice);
+app.delete('/api/devices/:userId/:deviceId', deleteDevice);
 // Fetching telemetry history (User looking at device data)
 app.get('/api/telemetry/:deviceId', fetchTelemetry);
 

@@ -173,27 +173,40 @@ export async function updateDevice(req: AuthRequest, res: Response) {
     }
 }
 
-// --- DELETE /api/devices/:id ---
+// --- DELETE /api/devices/:userId/:deviceId ---
 export async function deleteDevice(req: AuthRequest, res: Response) {
-    const id = parseInt(req.params.id as string, 10);
-    const ownerId = req.userId!;
+    const targetUserId = parseInt(req.params.userId as string, 10);
+    const targetDeviceId = parseInt(req.params.deviceId as string, 10);
+    const requesterId = req.userId!;
 
-    if (isNaN(id)) {
+    if (isNaN(targetDeviceId)) {
         return res.status(400).json({ error: 'Invalid device ID format.' });
     }
 
+    // Security Check (Horizontal Privilege Escalation prevention)
+    if (targetUserId !== requesterId) {
+        // OPTIONAL: Allow if requester.role === 'ADMIN'
+        return res.status(403).json({ error: 'Forbidden: You can only delete your own device' });
+    }
+
     try {
-        const deletedDevice = await deviceService.deleteDevice(id, ownerId);
-        // Respond with 204 No Content for a successful deletion, 
-        // or return the deleted object for confirmation (as done here).
-        res.status(200).json({ message: 'Device deleted successfully.', deleted: deletedDevice });
-    } catch (error) {
-        // Prisma error P2025: Record not found
-        if (error === 'P2025') {
+        const deletedDevice = await deviceService.deleteDeviceWithTokens(
+            targetDeviceId,
+            targetUserId
+        );
+        
+        return res.status(200).json({
+            message: 'Device deleted successfully.',
+            deleted: deletedDevice,
+        });
+
+    } catch (error: any) {
+        if (error.code === 'P2025') {
             return handleNotFound(res);
         }
+
         console.error('Delete device error:', error);
-        res.status(500).json({ error: 'Internal server error.' });
+        return res.status(500).json({ error: 'Internal server error.' });
     }
 }
 
