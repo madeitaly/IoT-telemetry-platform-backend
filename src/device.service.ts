@@ -96,6 +96,11 @@ export async function updateDevice(
 /** DELETE /api/devices/:userID/:deviceID : Deletes a device. */
 export async function deleteDeviceWithTokens(deviceId: number) {
   return prisma.$transaction(async (tx) => {  
+
+    await tx.telemetry.deleteMany({
+        where: { deviceId },
+    });
+
     await tx.deviceRegistrationToken.deleteMany({
       where: { deviceId },
     });
