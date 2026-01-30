@@ -6,6 +6,7 @@ describe('IoT Platform Full Handshake', () => {
 
   let userToken: string;
   let userId: number;
+  let testUserId: number;
 
   let adminToken: string;
   let adminId: number;
@@ -26,6 +27,7 @@ describe('IoT Platform Full Handshake', () => {
       });
       expect(res.status).toBe(201);
       expect(res.body).toHaveProperty('token');
+      testUserId = res.body.user.id; // Save for future deletion
     });
 
     //Sucessful Registration of a User ADMIN
@@ -106,17 +108,6 @@ describe('IoT Platform Full Handshake', () => {
 
       expect(res.status).toBe(401);
       expect(res.body.error).toBe('Session expired (Logged out)');
-    });
-
-    //Successful login of an ADMIN
-    it('should login ADMIN and get JWT', async () => {
-      const res = await request(app).post('/auth/login').send({
-        email: 'admin@test.com',
-        password: 'adminpass'
-      });
-      expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('token');
-      adminToken = res.body.token; // Save for future requests
     });
   });
 
@@ -226,6 +217,42 @@ describe('IoT Platform Full Handshake', () => {
     });
 
   });
+
+  describe('Admin Management', () => {
+    
+    //Successful login of an ADMIN
+    it('should login ADMIN and get JWT', async () => {
+      const res = await request(app).post('/auth/login').send({
+        email: 'admin@test.com',
+        password: 'adminpass'
+      });
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('token');
+      adminToken = res.body.token; // Save for future requests
+      adminId = res.body.user.id; // Save for future deletion
+    });
+
+    //Successful deletion of a User
+    it('should delete a User ', async () => {
+      const res = await request(app)
+        .delete(`/api/admin/users/${testUserId}`)
+        .set('Authorization', `Bearer ${adminToken}`);
+  
+        expect(res.status).toBe(200);
+        expect(res.body.deleted).toBe('user@test.com');
+    });
+
+    //Successful deletion of an Admin
+    it('should delete an Admin ', async () => {
+      const res = await request(app)
+        .delete(`/api/admin/users/${adminId}`)
+        .set('Authorization', `Bearer ${adminToken}`);
+  
+        expect(res.status).toBe(200);
+        expect(res.body.deleted).toBe('admin@test.com');
+    });
+  });
+
 
   // // --- 3. TELEMETRY & ZOD VALIDATION ---
   // describe('Telemetry Ingestion', () => {

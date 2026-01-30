@@ -12,6 +12,8 @@ import {
 } from './auth.service.js';
 import * as jwt from 'jsonwebtoken';
 import { blacklistToken } from './redis.service.js';
+import {Role} from './generated/prisma/client.js'; // Import the generated User type
+import { config } from './config.js';
 
 // Extend the Request interface to know about userId set by middleware
 interface AuthRequest extends Request {
@@ -23,7 +25,7 @@ interface AuthRequest extends Request {
  * Handles user registration: Hashing password and storing user in DB.
  */
 export async function register(req: Request, res: Response) {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
     if (!email || !password) {
         return res.status(400).json({ error: 'Email and password are required.' });
@@ -36,11 +38,24 @@ export async function register(req: Request, res: Response) {
             return res.status(409).json({ error: 'User with this email already exists.' });
         }
 
+        let assignedRole: Role = 'USER';
+
+        if (role === 'ADMIN') {
+            if (config.isDevelopment) {
+                assignedRole = 'ADMIN';
+                console.log(`⚠️ Creating ADMIN user: ${email} (Allowed in Development)`);
+            } else {
+                // In Production, we silently ignore the request to be Admin
+                console.warn(`SECURITY: Blocked attempt to create ADMIN user in Production: ${email}`);
+                assignedRole = 'USER';
+            }
+        }
+
         // 2. Hash the password
         const passwordHash = await hashPassword(password);
 
         // 3. Create the user in the database
-        const newUser = await createUser(email, passwordHash);
+        const newUser = await createUser(email, passwordHash, assignedRole);
 
         // 4. Create a JWT for the new user
         const token = createToken(newUser.id);
@@ -49,7 +64,7 @@ export async function register(req: Request, res: Response) {
         res.status(201).json({ 
             message: 'User registered successfully.',
             token,
-            user: { id: newUser.id, email: newUser.email }
+            user: { id: newUser.id, email: newUser.email, role: newUser.role }
         });
 
     } catch (error) {

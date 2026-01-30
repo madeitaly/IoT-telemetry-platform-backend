@@ -4,7 +4,7 @@
 import * as bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import {prisma} from './prisma-client.js';
-import type { User } from './generated/prisma/client.js'; // Import the generated User type
+import type { User, Role } from './generated/prisma/client.js'; // Import the generated User type
 
 // --- Configuration ---
 // Get the secret key from environment variables (MANDATORY for production)
@@ -63,11 +63,12 @@ export async function findUserById(id: number): Promise<User | null> {
 /**
  * Creates a new user in the database.
  */
-export async function createUser(email: string, passwordHash: string): Promise<User> {
+export async function createUser(email: string, passwordHash: string, role: Role = 'USER') : Promise<User> {
     return prisma.user.create({
         data: {
             email: email.toLowerCase(),
             password: passwordHash,
+            role: role,
         },
     });
 }
