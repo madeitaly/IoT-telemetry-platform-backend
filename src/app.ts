@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://iot-telemetry-platform-frontend.onrender.com/"
+    "https://iot-telemetry-platform-frontend.onrender.com"
   ],
   credentials: true
 }));
