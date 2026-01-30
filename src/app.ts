@@ -17,7 +17,6 @@ import { adminDeleteUser, adminDeleteDevice } from './admin.controller.js';
 import { validate } from './validate.middleware.js';
 import { TelemetrySchema } from './schemas.js'
 import cors from 'cors';
-import { config } from './config.js';
 
 
 const app = express()
@@ -28,9 +27,13 @@ app.use(morgan("dev"));
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-if (config.isDevelopment) {
-    app.use(cors()); // Allow all origins for development
-}
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://iot-telemetry-platform-frontend.onrender.com/"
+  ],
+  credentials: true
+}));
 
 
 
