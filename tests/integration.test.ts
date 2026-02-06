@@ -111,8 +111,8 @@ describe('IoT Platform Full Handshake', () => {
     });
   });
 
-  // --- 2. DEVICE LIFECYCLE (USER) ---
-  describe('Device Management (User Flow)', () => {
+  // --- 2. DEVICE LIFECYCLE (USER) PART 1---
+  describe('Device Management Creation (User Flow)', () => {
     
     it('should login USER and get JWT', async () => {
       const res = await request(app).post('/auth/login').send({
@@ -195,7 +195,61 @@ describe('IoT Platform Full Handshake', () => {
       expect(res.body.id).toBe(createdDeviceId);
       expect(res.body.ownerId).toBe(userId);
     });
+  });
 
+  // --- 3. TELEMETRY & ZOD VALIDATION ---
+  describe('Telemetry Ingestion', () => {
+    it('should ACCEPT valid telemetry data', async () => {
+      const res = await request(app)
+        .post('/api/telemetry')
+        .set('x-device-token', createdDeviceToken)
+        .send({
+          deviceId: createdDeviceId,
+          temperature: 25.5,
+          humidity: 55,
+          battery: 20,
+          payload: { status: "ok", firmware: "1.0.0"},
+          ts: new Date().toISOString()
+        });
+
+      expect(res.status).toBe(202); // Or 200
+    });
+
+    it('should REJECT invalid data format (Zod Validation)', async () => {
+      const res = await request(app)
+        .post('/api/telemetry')
+        .set('x-device-token', createdDeviceToken)
+        .send({
+          deviceId: createdDeviceId,
+          temperature: 255,
+        });
+
+      // Expecting 400 Bad Request from Zod middleware
+      expect(res.status).toBe(400); 
+    });
+  });
+
+  // --- 4. QUERY DATA ---
+  describe('Data Retrieval', () => {
+    it('should allow User to fetch telemetry for their device', async () => {
+      const res = await request(app)
+        .get(`/api/telemetry/${createdDeviceId}`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(200);
+
+      expect(res.body.length).toBeGreaterThan(0);
+
+      res.body.forEach((item: any) => {
+        expect(item).toHaveProperty('temperature');
+        expect(item).toHaveProperty('ts');
+        expect(item).toHaveProperty('payload');
+      });
+    });
+  });
+
+  // --- 5. DEVICE LIFECYCLE (USER) PART 2---
+  describe('Device Management Deletion (User Flow)', () => {
     it('should delete a device', async () => {
       const res = await request(app)
         .delete(`/api/devices/${userId}/${createdDeviceId}`)
@@ -215,11 +269,10 @@ describe('IoT Platform Full Handshake', () => {
 
       expect(res.status).toBe(404);
     });
-
   });
 
+  // --- 6. ADMIN MANAGEMENT ---
   describe('Admin Management', () => {
-    
     //Successful login of an ADMIN
     it('should login ADMIN and get JWT', async () => {
       const res = await request(app).post('/auth/login').send({
@@ -254,64 +307,8 @@ describe('IoT Platform Full Handshake', () => {
   });
 
 
-  // // --- 3. TELEMETRY & ZOD VALIDATION ---
-  // describe('Telemetry Ingestion', () => {
-  //   it('should REJECT invalid data format (Zod Validation)', async () => {
-  //     const res = await request(app)
-  //       .post('/api/telemetry')
-  //       .send({
-  //         deviceId: createdDeviceId,
-  //         // Missing 'value' or 'timestamp' assuming your schema requires them
-  //         nonsenseField: 'invalid'
-  //       });
+  
 
-  //     // Expecting 400 Bad Request from Zod middleware
-  //     expect(res.status).toBe(400); 
-  //   });
-
-  //   it('should ACCEPT valid telemetry data', async () => {
-  //     const res = await request(app)
-  //       .post('/api/telemetry')
-  //       .send({
-  //         deviceId: createdDeviceId,
-  //         data: { temp: 25.5 }, // Adjust based on your actual TelemetrySchema
-  //         timestamp: new Date().toISOString()
-  //       });
-
-  //     expect(res.status).toBe(201); // Or 200
-  //   });
-  // });
-
-  // // --- 4. QUERY DATA ---
-  // describe('Data Retrieval', () => {
-  //   it('should allow User to fetch telemetry for their device', async () => {
-  //     const res = await request(app)
-  //       .get(`/api/telemetry/${createdDeviceId}`)
-  //       .set('Authorization', `Bearer ${userToken}`);
-
-  //     expect(res.status).toBe(200);
-  //     expect(res.body).toHaveProperty('data'); // Assuming response structure
-  //   });
-  // });
-
-  // // --- 5. ADMIN RESTRICTIONS ---
-  // describe('Admin Access Control', () => {
-  //   it('should PREVENT User from deleting devices via Admin API', async () => {
-  //     const res = await request(app)
-  //       .delete(`/api/admin/devices/${createdDeviceId}`)
-  //       .set('Authorization', `Bearer ${userToken}`);
-
-  //     expect(res.status).toBe(403); // Forbidden
-  //   });
-
-  //   it('should ALLOW Admin to delete devices', async () => {
-  //     const res = await request(app)
-  //       .delete(`/api/admin/devices/${createdDeviceId}`)
-  //       .set('Authorization', `Bearer ${adminToken}`);
-
-  //     // Expect success (200) or 204 No Content
-  //     expect([200, 204]).toContain(res.status);
-  //   });
-//   });
+  
 
 });
