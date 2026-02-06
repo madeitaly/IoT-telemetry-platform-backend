@@ -6,6 +6,7 @@ export const TelemetrySchema = z.object({
   humidity: z.number().min(0).max(100),
   battery: z.number().min(0).max(100).optional(),
   payload: z.record(z.string(),z.any()).optional(), // Flexible JSON
+  ts: z.iso.datetime({ offset: false }) // must end with Z
 });
 
 // // 2. Device Creation Validation
