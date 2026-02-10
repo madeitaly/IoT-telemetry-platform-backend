@@ -61,6 +61,7 @@ jobs:
         JWT_SECRET: "super_secret_test_key"
         PORT: 3000
         REDIS_URL_LOCAL: "redis://localhost:6379"
+        FRONTEND_URL_LOCAL: "http://localhost:5173"
       run: |
         npx prisma migrate dev --name init # Create schema in test DB
         npx prisma generate
