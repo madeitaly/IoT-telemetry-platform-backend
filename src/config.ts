@@ -14,5 +14,8 @@ export const config = {
   redisUrl: isProduction
     ? process.env.REDIS_URL 
     : process.env.REDIS_URL_LOCAL,
+  frontendUrl: isProduction
+    ? process.env.FRONTEND_URL
+    : process.env.FRONTEND_URL_LOCAL,
   jwtSecret: isProduction ? process.env.JWT_SECRET : 'dev_secret_only',
 };

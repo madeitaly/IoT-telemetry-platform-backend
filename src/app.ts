@@ -1,3 +1,4 @@
+import { config }  from './config.js';
 import morgan from "morgan";
 import express from "express";
 import { register, login, logout, getProfile } from './auth.controller.js';
@@ -28,10 +29,11 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://iot-telemetry-platform-frontend.onrender.com"
-  ],
+  //origin: [
+  //  "http://localhost:5173",
+  //  "https://iot-telemetry-platform-frontend.onrender.com"
+  //],
+  origin: config.frontendUrl,
   credentials: true
 }));
 
