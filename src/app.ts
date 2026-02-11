@@ -70,7 +70,6 @@ app.get('/api/devices/:userId/:deviceId/deviceToken', getDeviceToken);
 app.patch('/api/devices/:userId/:deviceId', updateDevice);
 app.delete('/api/devices/:userId/:deviceId', deleteDevice);
 // Fetching telemetry history (User looking at device data)
-app.get('/api/telemetry/:deviceId', fetchTelemetry);
-
+app.get('/api/telemetry/:userId/:deviceId', fetchTelemetry);
 
 export default app; // Export app

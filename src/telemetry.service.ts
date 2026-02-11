@@ -58,3 +58,27 @@ export async function getTelemetry(deviceId: number, start: Date, end: Date) {
         orderBy: { ts: 'desc' }
     });
 }
+
+/**
+ * Retrieves telemetry for a specific device belonging to a user within a timeframe.
+ */
+export async function getTelemetryForUser( deviceId: number, userId: number, start: Date, end: Date) {
+    const device = await prisma.device.findFirst({
+        where: {
+            id: deviceId,
+            ownerId: userId
+        }
+    });
+
+    if (!device) {
+        throw new Error('FORBIDDEN');
+    }
+
+    return prisma.telemetry.findMany({
+        where: {
+            deviceId,
+            ts: { gte: start, lte: end }
+        },
+        orderBy: { ts: 'desc' }
+    });
+}
