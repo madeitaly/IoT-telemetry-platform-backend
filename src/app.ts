@@ -11,7 +11,7 @@ import {
     deleteDevice,
     getFleetStatus 
 } from './device.controller.js';
-import { ingestTelemetry, fetchTelemetry } from './telemetry.controller.js';
+import { ingestTelemetry, fetchTelemetry , fetchAnyTelemetry} from './telemetry.controller.js';
 import { authenticateToken } from './auth.middleware.js';
 import { authorizeRoles } from './auth.middleware.js';
 import { adminDeleteUser, adminDeleteDevice } from './admin.controller.js';
@@ -58,6 +58,7 @@ app.get('/api/devices/status-summary', authenticateToken, getFleetStatus);
 
 // --- ADMIN ONLY ROUTES ---
 // We chain the authorizeRoles middleware
+app.get('/api/telemetry/:deviceId', authorizeRoles('ADMIN'), fetchAnyTelemetry);
 app.delete('/api/admin/users/:userId', authorizeRoles('ADMIN'), adminDeleteUser);
 app.delete('/api/admin/devices/:deviceId', authorizeRoles('ADMIN'), adminDeleteDevice);
 
