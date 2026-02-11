@@ -233,7 +233,7 @@ describe('IoT Platform Full Handshake', () => {
   describe('Data Retrieval', () => {
     it('should allow User to fetch telemetry for their device', async () => {
       const res = await request(app)
-        .get(`/api/telemetry/${createdDeviceId}`)
+        .get(`/api/telemetry/${userId}/${createdDeviceId}`)
         .set('Authorization', `Bearer ${userToken}`);
 
       expect(res.status).toBe(200);
